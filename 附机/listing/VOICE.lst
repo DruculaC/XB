@@ -1,10 +1,10 @@
-C51 COMPILER V9.01   VOICE                                                                 05/04/2013 18:16:16 PAGE 1   
+C51 COMPILER V9.00   VOICE                                                                 05/13/2013 14:33:29 PAGE 1   
 
 
-C51 COMPILER V9.01, COMPILATION OF MODULE VOICE
+C51 COMPILER V9.00, COMPILATION OF MODULE VOICE
 OBJECT MODULE PLACED IN .\out\VOICE.obj
-COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE VOICE.c BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\VOICE.lst) OBJECT(.\out\V
-                    -OICE.obj)
+COMPILER INVOKED BY: E:\Program Files (x86)\keil\C51\BIN\C51.EXE VOICE.c BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\VOICE
+                    -.lst) OBJECT(.\out\VOICE.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52   2                      delay_us(250); // 延时 100US
   53   2                      SC_DATA=0; // 数据脉冲低
   54   2      //              delay_us(250); // 延时 100US
-C51 COMPILER V9.01   VOICE                                                                 05/04/2013 18:16:16 PAGE 2   
+C51 COMPILER V9.00   VOICE                                                                 05/13/2013 14:33:29 PAGE 2   
 
   55   2                      delay_us(250); // 延时 100US
   56   2              }

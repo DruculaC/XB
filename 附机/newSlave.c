@@ -399,11 +399,11 @@ void main(void)
 			}
 		}
 
-		if(SwitchControlcount==18000)
-		{
-			SwitchControl=0;
-			SwitchControlcount=0;	
-		}
+//		if(SwitchControlcount==18000)
+//		{
+//			SwitchControl=0;
+//			SwitchControlcount=0;	
+//		}
 	}
 }
 
@@ -413,164 +413,164 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 	TH1=timer1H;//重装载
 	TL1=timer1L;
    
-	if(SwitchControl==1)
+//	if(SwitchControl==1)
+//	{
+//		SwitchControlcount++;
+//	}
+//	else
+//	{
+	if(P11==0)//正常情况为高电平,有低电平说明有信号
 	{
-		SwitchControlcount++;
-	}
-	else
-	{
-		if(P11==0)//正常情况为高电平,有低电平说明有信号
+		DataBetween++;
+		ComFlag=0;
+		if(DataBetween==150)//低电平持续的最大时间	
 		{
-			DataBetween++;
-			ComFlag=0;
-			if(DataBetween==150)//低电平持续的最大时间	
-			{
-				DataBetween=0;
-			}
+			DataBetween=0;
 		}
-		else//为高电平了
+	}
+	else//为高电平了
+	{
+		if(ComFlag==0)//说明有一个低电平
 		{
-			if(ComFlag==0)//说明有一个低电平
-			{
-				ComFlag=1;
+			ComFlag=1;
 //				RecData<<=1;
-	
-				if((DataBetween>60)&&(DataBetween<=100))	//低电平持续的时间小于10ms，则为0
-				{
-					RecData<<=1;
-					RecData &= 0xfe;
-					DataTime++;
-					T1highcount=0;
-				}
-				else if((DataBetween>100))//低电平持续的时间大于4.5ms，则为1
-				{
-					RecData<<=1;
-					RecData |= 0x01;
-					DataTime++;
-					T1highcount=0;
-				}
-				else
-				{
-					T1highcount++;	
-				}
-	
-				DataBetween=0;
-//				DataTime++;
+
+			if((DataBetween>60)&&(DataBetween<=100))	//低电平持续的时间小于10ms，则为0
+			{
+				RecData<<=1;
+				RecData &= 0xfe;
+				DataTime++;
+				T1highcount=0;
+			}
+			else if((DataBetween>100))//低电平持续的时间大于4.5ms，则为1
+			{
+				RecData<<=1;
+				RecData |= 0x01;
+				DataTime++;
+				T1highcount=0;
 			}
 			else
 			{
-				T1highcount++;
-				if(T1highcount>=120)
-				{
-					DataTime=0;
-					ComFlag=1;
-					count=0;
-				}		
+				T1highcount++;	
 			}
-		}
-	
-		if(DataTime==8)//说明一个字节的数据已经接受完全
-		{
-			DataTime=0;
-			myTxRxData[count]=RecData;
-			if(count==0&&myTxRxData[0]==CmdHead)
-			{
-				count=1;
-			}
-			else if(count==1&&myTxRxData[1]==MyAddress)
-			{
-				count=2;
-			}
-			else if(count>=2&&count<=5)
-			{
-				count++;
-			}
-			else if(count==6)
-			{
-				receiveFlag=1;
-				count=0;
-			}
-			else 
-			{
-				count=0;
-			}
-		}
-	
-		if(receiveFlag==1)	//说明接收到了数据，开始处理
-		{
-			receiveFlag=0;	//清接收标志
-			SwitchControl=1;
 
-	//		transCode(TxRxBuf,0x1c);//将接收到得数据解码
-	 
-			switch(myTxRxData[2])//解析指令
+			DataBetween=0;
+//				DataTime++;
+		}
+		else
+		{
+			T1highcount++;
+			if(T1highcount>=120)
 			{
+				DataTime=0;
+				ComFlag=1;
+				count=0;
+			}		
+		}
+	}
+
+	if(DataTime==8)//说明一个字节的数据已经接受完全
+	{
+		DataTime=0;
+		myTxRxData[count]=RecData;
+		if(count==0&&myTxRxData[0]==CmdHead)
+		{
+			count=1;
+		}
+		else if(count==1&&myTxRxData[1]==MyAddress)
+		{
+			count=2;
+		}
+		else if(count>=2&&count<=5)
+		{
+			count++;
+		}
+		else if(count==6)
+		{
+			receiveFlag=1;
+			count=0;
+		}
+		else 
+		{
+			count=0;
+		}
+	}
+
+	if(receiveFlag==1)	//说明接收到了数据，开始处理
+	{
+		receiveFlag=0;	//清接收标志
+		SwitchControl=1;
+
+//		transCode(TxRxBuf,0x1c);//将接收到得数据解码
+ 
+		switch(myTxRxData[2])//解析指令
+		{
 /*
-				case ComMode_1://接收到的是主机发送过来的编码1的信号，说明主机在3M内，是正常的
-				{	
-	//					newAddr=(newAddr|myTxRxData[4])<<8;//高八位
-	//					newAddr=newAddr+myTxRxData[3];		   //低八位
-	//					if(PassWord[newAddr]==myTxRxData[5]&&PassWord[newAddr+1]==myTxRxData[6])//密码表是否滚动了一个然后对的住
-	//					{
-	//						if(newAddr>=999)
-	//						{
-	//							lastAddr=0;
-					TestFlag=0;
+			case ComMode_1://接收到的是主机发送过来的编码1的信号，说明主机在3M内，是正常的
+			{	
+//					newAddr=(newAddr|myTxRxData[4])<<8;//高八位
+//					newAddr=newAddr+myTxRxData[3];		   //低八位
+//					if(PassWord[newAddr]==myTxRxData[5]&&PassWord[newAddr+1]==myTxRxData[6])//密码表是否滚动了一个然后对的住
+//					{
+//						if(newAddr>=999)
+//						{
+//							lastAddr=0;
+				TestFlag=0;
 
 //					alarmCount2=0;//清报警计数器
 //					alarmFlag2=0;//清报警标志
 //					alarmCount3=0;//清报警计数器
 //					alarmFlag3=0;//清报警标志
-	//				SwitchControl=1;
-	//						}
-	//						else
-	//						{
-	//							 lastAddr+=1;
-	//							 TestFlag=0;//正常情况，清超时标志
-	//						}
-	//				dataFirst=ComMode_1;
-	//				if(ModeFlag==2||ModeFlag==3)
-	//				{
-	//					SC_Speech(0x01);	//恢复了正常，做相应复位动作
-	//				}
-				}
-				break;
-*/				
-				case ComMode_2://说明在30m内，已不正常
-				{
-					TestFlag=0;//清超时标志
-//					alarmFlag2=1;
-					alarmCount2=0;//清报警计数器
-					alarmFlag2=0;//清报警标志
-					alarmCount3=0;//清报警计数器
-					alarmFlag3=0;//清报警标志
-				}
-				break;
-				
-				case ComMode_3:
-				{
-//					TestFlag=0;//清超时标志				
-					alarmFlag3=1;
-					alarmCount2=3;			
-				}
-				break;
-				
-				case ComMode_4://留作抬起信号使用
-				{
-					TestFlag=0;//清超时标志	
-					alarmFlag4=1;//抬起报警
-				}
-				break;
-	
-				case ComMode_5://留作倒地信号使用
-				{
-					TestFlag=0;//清超时标志
-					alarmFlag5=1;	//倒地报警
-				}
-				break;
+//				SwitchControl=1;
+//						}
+//						else
+//						{
+//							 lastAddr+=1;
+//							 TestFlag=0;//正常情况，清超时标志
+//						}
+//				dataFirst=ComMode_1;
+//				if(ModeFlag==2||ModeFlag==3)
+//				{
+//					SC_Speech(0x01);	//恢复了正常，做相应复位动作
+//				}
 			}
+			break;
+*/				
+			case ComMode_2://说明在30m内，已不正常
+			{
+				TestFlag=0;//清超时标志
+//					alarmFlag2=1;
+				alarmCount2=0;//清报警计数器
+				alarmFlag2=0;//清报警标志
+				alarmCount3=0;//清报警计数器
+				alarmFlag3=0;//清报警标志
+			}
+			break;
+			
+			case ComMode_3:
+			{
+//					TestFlag=0;//清超时标志				
+				alarmFlag3=1;
+				alarmCount2=3;			
+			}
+			break;
+			
+			case ComMode_4://留作抬起信号使用
+			{
+				TestFlag=0;//清超时标志	
+				alarmFlag4=1;//抬起报警
+			}
+			break;
+
+			case ComMode_5://留作倒地信号使用
+			{
+				TestFlag=0;//清超时标志
+				alarmFlag5=1;	//倒地报警
+			}
+			break;
 		}
 	}
+//	}
 }
 
 void time0() interrupt 1	//作为整个系统自己的时钟

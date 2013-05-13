@@ -3,8 +3,8 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\richard\Desktop\bag - 副本\主机\newHost.uvproj
-Project File Date:  04/16/2013
+C:\Users\DXM\Desktop\GitHub\XB\主机\newHost.uvproj
+Project File Date:  05/09/2013
 
 <h2>Output:</h2>
 Build target 'Target 1'
@@ -34,6 +34,6 @@ linking...
     SEGMENT: ?PR?INITSIGNAL?NEWHOST
     CALLER1: ?PR?TIMET1?NEWHOST
     CALLER2: ?PR?TIME0?NEWHOST
-Program Size: data=10.5 xdata=79 code=3630
+Program Size: data=10.5 xdata=79 code=3589
 creating hex file from ".\out\newHost"...
 ".\out\newHost" - 0 Error(s), 8 Warning(s).

@@ -242,10 +242,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>27</ColumnNumber>
+      <ColumnNumber>3</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>219</TopLine>
-      <CurrentLine>241</CurrentLine>
+      <TopLine>614</TopLine>
+      <CurrentLine>636</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\newHost.c</PathWithFileName>
       <FilenameWithoutPath>newHost.c</FilenameWithoutPath>
@@ -337,7 +337,7 @@
   </Group>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\N79E81X.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\N79E81X.H</PathWithFilename>
     <TopLine>153</TopLine>
     <CurrentLine>153</CurrentLine>
     <Constant>0</Constant>
@@ -363,7 +363,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\AD.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\AD.H</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>4</CurrentLine>
     <Constant>0</Constant>
@@ -389,7 +389,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\PWM.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\PWM.H</PathWithFilename>
     <TopLine>18</TopLine>
     <CurrentLine>27</CurrentLine>
     <Constant>0</Constant>
@@ -415,7 +415,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\T0.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\T0.H</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>10</CurrentLine>
     <Constant>0</Constant>
@@ -441,7 +441,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\VOICE.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\VOICE.H</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>10</CurrentLine>
     <Constant>0</Constant>
@@ -467,7 +467,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\UART.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\UART.H</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>12</CurrentLine>
     <Constant>0</Constant>
@@ -493,7 +493,7 @@
   </AlienFiles>
 
   <AlienFiles>
-    <PathWithFilename>C:\Users\richard\Desktop\bag - 副本\主机\T1.H</PathWithFilename>
+    <PathWithFilename>C:\Users\DXM\Desktop\GitHub\XB\主机\T1.H</PathWithFilename>
     <TopLine>1</TopLine>
     <CurrentLine>6</CurrentLine>
     <Constant>0</Constant>
@@ -1869,9 +1869,9 @@
         </Doc>
         <Doc>
           <Name>.\newHost.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>470</TopLine>
-          <CurrentLine>470</CurrentLine>
+          <ColumnNumber>3</ColumnNumber>
+          <TopLine>614</TopLine>
+          <CurrentLine>636</CurrentLine>
         </Doc>
         <Doc>
           <Name>T1.H</Name>

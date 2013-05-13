@@ -299,11 +299,11 @@ void main()
 			PAshutdown=0;
 		}
 */
-		if(SwitchControlcount==18000)
-		{
-			SwitchControl=0;
-			SwitchControlcount=0;	
-		}
+//		if(SwitchControlcount==18000)
+//		{
+//			SwitchControl=0;
+//			SwitchControlcount=0;	
+//		}
 	}
 }
 
@@ -313,236 +313,281 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 	TH1=timer1H;//重装载
 	TL1=timer1L;
 
-	if(SwitchControl==1)
+//	if(SwitchControl==1)
+//	{
+//		SwitchControlcount++;
+//	}
+//	else
+//	{
+	if(P11==0)//正常情况为高电平,有低电平说明有信号
 	{
-		SwitchControlcount++;
-	}
-	else
-	{
-		if(P11==0)//正常情况为高电平,有低电平说明有信号
+		DataBetween++;
+		ComFlag=0;
+		if(DataBetween==150)//低电平持续的最大时间	
 		{
-			DataBetween++;
-			ComFlag=0;
-			if(DataBetween==150)//低电平持续的最大时间	
-			{
-				DataBetween=0;
-			}
+			DataBetween=0;
 		}
-		else//为高电平了
+	}
+	else//为高电平了
+	{
+		if(ComFlag==0)//说明有一个低电平
 		{
-			if(ComFlag==0)//说明有一个低电平
-			{
-				ComFlag=1;
+			ComFlag=1;
 //				RecData<<=1;
-	
-				if((DataBetween>60)&&(DataBetween<=100))	//低电平持续的时间小于10ms，则为0
-				{
-					RecData<<=1;
-					RecData &= 0xfe;
-					DataTime++;
-					T1highcount=0;
-				}
-				else if((DataBetween>100))//低电平持续的时间大于4.5ms，则为1
-				{
-					RecData<<=1;
-					RecData |= 0x01;
-					DataTime++;
-					T1highcount=0;
-				}
-				else
-				{
-					T1highcount++;	
-				}
-	
-				DataBetween=0;
-//				DataTime++;
+
+			if((DataBetween>60)&&(DataBetween<=100))	//低电平持续的时间小于10ms，则为0
+			{
+				RecData<<=1;
+				RecData &= 0xfe;
+				DataTime++;
+				T1highcount=0;
+			}
+			else if((DataBetween>100))//低电平持续的时间大于4.5ms，则为1
+			{
+				RecData<<=1;
+				RecData |= 0x01;
+				DataTime++;
+				T1highcount=0;
 			}
 			else
 			{
-				T1highcount++;
-				if(T1highcount>=120)
-				{
-					DataTime=0;
-					ComFlag=1;
-					count=0;
-				}		
+				T1highcount++;	
 			}
+
+			DataBetween=0;
+//				DataTime++;
 		}
-	//	P01=~P01;
-	
-		if(DataTime==8)//说明一个字节的数据已经接受完全
+		else
 		{
-			DataTime=0;
-			myTxRxData[count]=RecData;
-			if(count==0&&myTxRxData[0]==CmdHead)
+			T1highcount++;
+			if(T1highcount>=120)
 			{
-				count=1;
-			}
-			else if(count==1&&myTxRxData[1]==MyAddress)
-			{
-				count=2;
-			}
-			else if(count>=2&&count<=5)
-			{
-				count++;
-			}
-			else if(count==6)
-			{
-			    receiveFlag=1;
+				DataTime=0;
+				ComFlag=1;
 				count=0;
-			}
-			else 
-			{
-				count=0;
-			}
+			}		
 		}
-	
-		if(receiveFlag==1)
+	}
+//	P01=~P01;
+
+	if(DataTime==8)//说明一个字节的数据已经接受完全
+	{
+		DataTime=0;
+		myTxRxData[count]=RecData;
+		if(count==0&&myTxRxData[0]==CmdHead)
 		{
-			receiveFlag=0;
-			SwitchControl=1;
-	//		transCode(TxRxBuf,0x1c);//将接收到得数据解码	
-	//		解析命令
-			switch(myTxRxData[2]) //对数据帧里的命令进行处理
+			count=1;
+		}
+		else if(count==1&&myTxRxData[1]==MyAddress)
+		{
+			count=2;
+		}
+		else if(count>=2&&count<=5)
+		{
+			count++;
+		}
+		else if(count==6)
+		{
+		    receiveFlag=1;
+			count=0;
+		}
+		else 
+		{
+			count=0;
+		}
+	}
+
+	if(receiveFlag==1)
+	{
+		receiveFlag=0;
+		SwitchControl=1;
+//		transCode(TxRxBuf,0x1c);//将接收到得数据解码	
+//		解析命令
+		switch(myTxRxData[2]) //对数据帧里的命令进行处理
+		{
+			case CmdStart://若是开机指令，执行开机操作
 			{
-				case CmdStart://若是开机指令，执行开机操作
+//在这里加入开机的时候要做的事情
+				ModeControl_1=1; 	//发射机模式控制端,开机时为30M模式
+			    VoiceControl=1;		//开机时主机开拾音器
+				
+				if(magnetflag==0)
 				{
-	//在这里加入开机的时候要做的事情
-					ModeControl_1=1; 	//发射机模式控制端,开机时为30M模式
-				    VoiceControl=1;		//开机时主机开拾音器
-					
-					if(magnetflag==0)
-					{
-						MagentControl_1=1;//开启磁铁
-						MagentControl_2=0;
-						Delay(27);
-						MagentControl_1=0;//磁铁常态为这种模式
-						MagentControl_2=0;
-						magnetflag=1;
-					}
-	
-					SensorControl=0;
-					commuFlag=1; //开启通信
-					turnflag=1;
+					MagentControl_1=1;//开启磁铁
+					MagentControl_2=0;
+					Delay(27);
+					MagentControl_1=0;//磁铁常态为这种模式
+					MagentControl_2=0;
+					magnetflag=1;
 				}
-				break;
-	
-				case CmdStop:     //若是关机指令，执行关机操作
+
+				SensorControl=0;
+				commuFlag=1; //开启通信
+				turnflag=1;
+			}
+			break;
+
+			case CmdStop:     //若是关机指令，执行关机操作
+			{
+//在这里加入关机的时候要做的事情
+				
+				VoiceControl=0;//关闭拾声器
+
+				if(magnetflag==1)
 				{
-	//在这里加入关机的时候要做的事情
-					
-					VoiceControl=0;//关闭拾声器
-	
-					if(magnetflag==1)
-					{
-						MagentControl_1=0;//开启磁铁
-						MagentControl_2=1;
-						Delay(27);
-						MagentControl_1=0;//磁铁常态为这种模式
-						MagentControl_2=0;
-						magnetflag=0;
-					}
-					SensorControl=0;//关闭三轴传感器
-
-					commuFlag=0;//关闭通信
-
-					alarmFlag=0;//关报警标志位
-					alarmCount=0;//报警计数次数清零
-					turnflag=1;
-
-	//				VoiceControl=1;//使用语音时要关闭拾声器
-	//				SC_Speech(12);  //
-	//				Delay(100);
-	//	
-	//				if(Check2>=0x3cf)//设置比较电压，此处为4V,以4.2V为基准
-	//				{
-	//					SC_Speech(10);  //电量充足提示
-	//					Delay(100);
-	//				}
-	//				else if(Check2<0x3cf&&Check2>=399)
-	//				{
-	//					SC_Speech(9);  //电量充足提示
-	//					Delay(100);
-	//				}
-	//				else if(Check2<0x399&&Check2>=0x366)
-	//				{
-	//					SC_Speech(8);  //电量充足提示
-	//					Delay(100);
-	//				}
-	//				else if(Check2<0x366)
-	//				{
-	//					SC_Speech(7);  //电量充足提示
-	//					Delay(100);
-	//				}
-	//
-	//				VoiceControl=0;//开启拾声器
+					MagentControl_1=0;//开启磁铁
+					MagentControl_2=1;
+					Delay(27);
+					MagentControl_1=0;//磁铁常态为这种模式
+					MagentControl_2=0;
+					magnetflag=0;
 				}
-				break;
-	
-				case ComMode_1:  //附机发送过来的只用模式1，说明现在是正常的，数据部分为数组的第一和第二个字节，为密码表内的这个编码的开始字节的那个地址，然后填充数据帧，把密码表的数据发送出去
-				{
+				SensorControl=0;//关闭三轴传感器
+
+				commuFlag=0;//关闭通信
+
+				alarmFlag=0;//关报警标志位
+				alarmCount=0;//报警计数次数清零
+				turnflag=1;
+
+//				VoiceControl=1;//使用语音时要关闭拾声器
+//				SC_Speech(12);  //
+//				Delay(100);
+//	
+//				if(Check2>=0x3cf)//设置比较电压，此处为4V,以4.2V为基准
+//				{
+//					SC_Speech(10);  //电量充足提示
+//					Delay(100);
+//				}
+//				else if(Check2<0x3cf&&Check2>=399)
+//				{
+//					SC_Speech(9);  //电量充足提示
+//					Delay(100);
+//				}
+//				else if(Check2<0x399&&Check2>=0x366)
+//				{
+//					SC_Speech(8);  //电量充足提示
+//					Delay(100);
+//				}
+//				else if(Check2<0x366)
+//				{
+//					SC_Speech(7);  //电量充足提示
+//					Delay(100);
+//				}
+//
+//				VoiceControl=0;//开启拾声器
+			}
+			break;
+
+			case ComMode_1:  //附机发送过来的只用模式1，说明现在是正常的，数据部分为数组的第一和第二个字节，为密码表内的这个编码的开始字节的那个地址，然后填充数据帧，把密码表的数据发送出去
+			{
 //					commode2_flag=1;
-					ComMode_22_Data();//回复确认信号
-					alarmFlag=0;//关报警标志位
-					alarmCount=0;//报警计数次数清零
-					commode2_flag=0;  //关闭编码2信号的发送
+				ComMode_22_Data();//回复确认信号
+				alarmFlag=0;//关报警标志位
+				alarmCount=0;//报警计数次数清零
+				commode2_flag=0;  //关闭编码2信号的发送
 //					commode3_flag=0;
-	
-	//				lastAddr=newAddr;
-					SensorControl=0;	//关闭三轴传感器
-					downUpFlag=0; 		//关倒地、抬起检测
-								
+
+//				lastAddr=newAddr;
+				SensorControl=0;	//关闭三轴传感器
+				downUpFlag=0; 		//关倒地、抬起检测
+							
 //				   	if(TestFlag>=3)//有异常情况恢复时，开启电子锁
 //				  	{
-					if(magnetflag==0)
-					{
-						MagentControl_1=1;//开启磁铁
-						MagentControl_2=0;
-						Delay(27);
-						MagentControl_1=0;//磁铁常态为这种模式
-						MagentControl_2=0;
-						magnetflag=1;
-					}
-//					}
-					TestFlag=0;	
-					
-					if(ModeFlag==3||ModeFlag==2)
-					{
-					//恢复了正常，做相应复位动作
-						ModeFlag=1;
-					}
+				if(magnetflag==0)
+				{
+					MagentControl_1=1;//开启磁铁
+					MagentControl_2=0;
+					Delay(27);
+					MagentControl_1=0;//磁铁常态为这种模式
+					MagentControl_2=0;
+					magnetflag=1;
 				}
-				break;
-	/*
-					case ComMode_1:  //附机发送过来的只用模式1，说明现在是正常的，数据部分为数组的第一和第二个字节，为密码表内的这个编码的开始字节的那个地址，然后填充数据帧，把密码表的数据发送出去
-					{
+//					}
+				TestFlag=0;	
+				
+				if(ModeFlag==3||ModeFlag==2)
+				{
+				//恢复了正常，做相应复位动作
+					ModeFlag=1;
+				}
+			}
+			break;
+/*
+				case ComMode_1:  //附机发送过来的只用模式1，说明现在是正常的，数据部分为数组的第一和第二个字节，为密码表内的这个编码的开始字节的那个地址，然后填充数据帧，把密码表的数据发送出去
+				{
+
+
+//							newAddr=(newAddr|myTxRxData[4])<<8;//高八位
+//							newAddr=newAddr+myTxRxData[3];		   //低八位
+
 	
 	
-	//							newAddr=(newAddr|myTxRxData[4])<<8;//高八位
-	//							newAddr=newAddr+myTxRxData[3];		   //低八位
+							if(PassWord[lastAddr+1]==myTxRxData[5]&&PassWord[lastAddr+2]==myTxRxData[6])//密码表是否滚动了一个然后对的住
+							{
+								
+//								if(newAddr==0 &&( (lastAddr-newAddr)>=997 ||(lastAddr-newAddr)==0))
+//								{ 
+								
+//								if(newAddr>=999)
+//								{
+//									newAddr=0;
+//									lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
+//								}
+//								else 
+//								{
+//									lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
+//									newAddr+=1;//地址滚动一次
+//								}
+
+								ComMode_1_Data(newAddr);//回复确认信号
+								
 	
-		
-		
-								if(PassWord[lastAddr+1]==myTxRxData[5]&&PassWord[lastAddr+2]==myTxRxData[6])//密码表是否滚动了一个然后对的住
+								alarmFlag=0;//关报警标志位
+								alarmCount=0;//报警计数次数清零
+	
+								lastAddr=newAddr;
+								SensorControl=0;//关闭三轴传感器
+								
+							   if(TestFlag>=3)//有异常情况恢复时，开启电子锁
+							   {
+									MagentControl_1=0;//开启磁铁
+									MagentControl_2=1;
+									Delay(1);
+//									MagentControl_1=1;//磁铁常态为这种模式
+//									MagentControl_2=1;
+								
+									MagentControl_1=0;//磁铁常态为这种模式
+									MagentControl_2=0;
+								}
+	
+								TestFlag=0;	
+								
+								if(ModeFlag==3||ModeFlag==2)
 								{
-									
-	//								if(newAddr==0 &&( (lastAddr-newAddr)>=997 ||(lastAddr-newAddr)==0))
-	//								{ 
-									
-	//								if(newAddr>=999)
-	//								{
-	//									newAddr=0;
-	//									lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
-	//								}
-	//								else 
-	//								{
-	//									lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
-	//									newAddr+=1;//地址滚动一次
-	//								}
-	
+								//恢复了正常，做相应复位动作
+									ModeFlag=1;
+								}
+							}
+
+							else//地址滚动不相等
+							{
+								newAddr=select(myTxRxData[5]);	//查找第一个密码的地址
+								if(newAddr!=1001)//找到了这个
+								{
+									if(newAddr>=999)
+									{
+										newAddr=0;
+										lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
+									}
+									else
+									{
+										lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
+										newAddr+=1;//地址滚动一次
+									}
+
 									ComMode_1_Data(newAddr);//回复确认信号
-									
-		
+
 									alarmFlag=0;//关报警标志位
 									alarmCount=0;//报警计数次数清零
 		
@@ -554,9 +599,6 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 										MagentControl_1=0;//开启磁铁
 										MagentControl_2=1;
 										Delay(1);
-	//									MagentControl_1=1;//磁铁常态为这种模式
-	//									MagentControl_2=1;
-									
 										MagentControl_1=0;//磁铁常态为这种模式
 										MagentControl_2=0;
 									}
@@ -569,72 +611,30 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 										ModeFlag=1;
 									}
 								}
+							}
+	//							}
+	//							else if(newAddr<=1000&&(newAddr-lastAddr<=3))
+	//							else if((newAddr-lastAddr)<=3)
+	//							{
+	//								
+	//								TestFlag=0;
+	//								lastAddr=newAddr;
+	//								SensorControl=1;//关闭三轴传感器
+	//								ComMode_1_Data(newAddr);//回复确认信号
+	//								if(ModeFlag==2)
+	//								{
+	//								//恢复了正常，做相应复位动作
+	//									ModeFlag=1;
+	//								}
+	//							}
 	
-								else//地址滚动不相等
-								{
-									newAddr=select(myTxRxData[5]);	//查找第一个密码的地址
-									if(newAddr!=1001)//找到了这个
-									{
-										if(newAddr>=999)
-										{
-											newAddr=0;
-											lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
-										}
-										else
-										{
-											lastAddr=newAddr;//保存这次的密码地址，为下次地址做校对使用
-											newAddr+=1;//地址滚动一次
-										}
-	
-										ComMode_1_Data(newAddr);//回复确认信号
-	
-										alarmFlag=0;//关报警标志位
-										alarmCount=0;//报警计数次数清零
-			
-										lastAddr=newAddr;
-										SensorControl=0;//关闭三轴传感器
-										
-									   if(TestFlag>=3)//有异常情况恢复时，开启电子锁
-									   {
-											MagentControl_1=0;//开启磁铁
-											MagentControl_2=1;
-											Delay(1);
-											MagentControl_1=0;//磁铁常态为这种模式
-											MagentControl_2=0;
-										}
-			
-										TestFlag=0;	
-										
-										if(ModeFlag==3||ModeFlag==2)
-										{
-										//恢复了正常，做相应复位动作
-											ModeFlag=1;
-										}
-									}
-								}
-		//							}
-		//							else if(newAddr<=1000&&(newAddr-lastAddr<=3))
-		//							else if((newAddr-lastAddr)<=3)
-		//							{
-		//								
-		//								TestFlag=0;
-		//								lastAddr=newAddr;
-		//								SensorControl=1;//关闭三轴传感器
-		//								ComMode_1_Data(newAddr);//回复确认信号
-		//								if(ModeFlag==2)
-		//								{
-		//								//恢复了正常，做相应复位动作
-		//									ModeFlag=1;
-		//								}
-		//							}
-		
-								}
-					}
-					break;
+							}
+				}
+				break;
 */	
-			}
 		}
 	}
+//	}
 }
 
 void time0() interrupt 1	//作为整个系统自己的时钟
