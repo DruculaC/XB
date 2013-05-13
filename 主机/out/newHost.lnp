@@ -1,0 +1,10 @@
+".\out\STARTUP.obj",
+".\out\newHost.obj",
+".\out\AD.obj",
+".\out\PWM.obj",
+".\out\T0.obj",
+".\out\UART.obj",
+".\out\VOICE.obj",
+".\out\T1.obj" 
+TO ".\out\newHost" 
+PRINT(".\listing\newHost.m51")

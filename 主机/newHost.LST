@@ -1,0 +1,632 @@
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE NEWHOST
+OBJECT MODULE PLACED IN newHost.OBJ
+COMPILER INVOKED BY: C:\Keil\C51\BIN\C51.EXE newHost.c LARGE BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+   1          
+   2          #include"N79E81x.h"
+   3          #include<intrins.h>
+   4          #include"AD.h"
+   5          #include"UART.h"
+   6          #include"T0.h"
+   7          #include"voice.h"
+   8          #include"pwm.h"
+   9          
+  10          //¶¨ÒåÍ¨ÐÅÃüÁî
+  11          
+  12          
+  13          #define CmdStart 0x00 //¿ª»úÃüÁî
+  14          #define CmdStop 0x01  //¹Ø»úÃüÁî
+  15          
+  16          #define ComMode_1 0xc1 //Í¨ÐÅÄ£Ê½1 
+  17          #define ComMode_2 0xc2 //Í¨ÐÅÄ£Ê½2
+  18          #define ComMode_3 0xc3 //Í¨ÐÅÄ£Ê½3
+  19          
+  20          #define Succeed 0xce  //Í¨ÐÅ³É¹¦
+  21          #define Wrong 0xff    //Í¨ÐÅÊ§°Ü
+  22          
+  23          
+  24          #define CmdHead 0xc8
+  25          
+  26          #define CmdHead1 0xcc //Êý¾ÝÖ¡µÄÊ×²¿1,11001100,00
+  27          #define CmdHead2 0xc3 //Êý¾ÝÖ¡µÄÊ×²¿2,11000011,01
+  28          #define CmdHead3 0xcc //Êý¾ÝÖ¡µÄÊ×²¿3,11001100,00
+  29          #define CmdHead4 0x33 //Êý¾ÝÖ¡µÄÊ×²¿4,00110011,11
+  30          
+  31          
+  32          
+  33          #define MyAddress 0xe0
+  34          
+  35          #define MyAddress1 0xcc //±¾»úµØÖ·1,11001100,00
+  36          #define MyAddress2 0xcc //±¾»úµØÖ·2,11001100,00
+  37          #define MyAddress3 0xc3 //±¾»úµØÖ·3,11000011,01
+  38          #define MyAddress4 0x33 //±¾»úµØÖ·4,00110011,11
+  39          
+  40          
+  41          
+  42          //Ö÷»úµÄ·¢Éä²¿·ÖµÄ¿ØÖÆ¶Ë¿Ú
+  43          //sbit PWMout=P0^1;//·¢Éä»úµÄ·½²¨Êä³ö¿Ú
+  44          sbit ModeControl_1=P2^6;//·¢Éä»úÄ£Ê½¿ØÖÆ,0ÁÁÎª30MÄ£Ê½£¬1ÃðÎª300MÄ£Ê½
+  45          sbit ModeTurn=P2^7;//·¢Éä»ú¿ª¹Ø£¬0ÁÁÎª¿ªÁË£¬1ÃðÎª¹ØÁË
+  46          
+  47          
+  48          
+  49          //ÈýÖá´«¸ÐÆ÷
+  50          sbit ReceWave=P0^7;//ÈýÖá´«¸ÐÆ÷²¨ÐÎÊäÈë
+  51          sbit SensorControl=P2^5;//ÈýÖá´«¸ÐÆ÷¿ØÖÆ¶Ë
+  52          
+  53          //µç´ÅÌú
+  54          sbit MagentControl_1=P2^2;
+  55          sbit MagentControl_2=P2^3;
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 2   
+
+  56          
+  57          
+  58          //Ê°ÒôÆ÷¿ØÖÆ ADµÄ6ºÅÍ¨µÀÎªÊ°ÒôÆ÷µÄÒôÁ¿¼ì²é¶Ë
+  59          sbit VoiceControl=P2^4;//Ê°ÒôÆ÷¿ØÖÆ¶Ë
+  60          
+  61          
+  62          
+  63          
+  64          unsigned char count=0;//Êý¾Ý½ÓÊÕ²¿·ÖµÄ¼ÆÊýÆ÷
+  65          
+  66          unsigned int lastAddr=0;//ÉÏÒ»´Î½ÓÊÕµ½µÄ±àÂëµÄµØÖ·
+  67          
+  68          
+  69          unsigned int time0Count_3=0;//×÷Îª´®¿ÚÃ¿ÃëÖ÷¸¨»úµÄÐÅÏ¢½»»¥Ê±ÖÓ
+  70          unsigned char  time0Count_4=0; //×÷ÎªÈýÖá´«¸ÐÆ÷µÄ½ÓÊÕ·½²¨Ê±¼ä±äÁ¿
+  71          
+  72          unsigned char TestFlag=0;//1¡¢2¡¢3·Ö±ðÎªÃ¿´Î½ÓÊÕµ½¸½»ú·¢ËÍÀ´Êý¾ÝºóµÄ¼ÆÊý£¬ÔÚ´®¿ÚµÄ³É¹¦Ö¸ÁîÀï»áÖ´ÐÐ½«È¥¹éÁã
+             -µÄ²Ù×÷
+  73                          //Èç¹ûÁ¬Ðø3´Î¶¼Ã»ÓÐ¹éÁã£¬ÔòËµÃ÷²»ÔÚ³¡ÁË
+  74          unsigned char ModeFlag=1;//Ä£Ê½Ñ¡ÔñÎ»£¬1ÔòÓÃÄ£Ê½1,2ÔòÓÃÄ£Ê½2,3ÔòÎªÄ£Ê½3
+  75          
+  76          unsigned char ACKCount=0;//×÷ÎªÖ÷»ú»Ø¸´È·ÈÏÖ¸ÁîµÄ¼ÆÊýÆ÷
+  77          
+  78          
+  79          //×÷Îª½ÓÊÕºÍ·¢ËÍµÄ»º´æÇø
+  80          unsigned char TxRxBuf[28]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+             -,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+  81          
+  82          bit receiveFlag=0;//½ÓÊÕµ½Êý¾Ý±êÖ¾
+  83          
+  84          
+  85          //º¯ÊýÉùÃ÷
+  86          void ComMode_1_Data(unsigned int sendAddr);     //·¢ËÍÄ£Ê½1±àÂë
+  87          void ComMode_2_Data(unsigned int sendAddr);//·¢ËÍÄ£Ê½2±àÂë
+  88          void ComMode_3_Data(unsigned int sendAddr);//·¢ËÍÄ£Ê½3±àÂë
+  89          
+  90          void codeData(unsigned char *doData,unsigned char len);         //±àÂë ,µçÆ½1±äÎª0011£¬µçÆ½0±äÎª1100
+  91          void transCode(unsigned char *doData,unsigned char len);//½âÂë£¬½«½ÓÊÕµ½µÃÊý¾Ý»¹Ô­
+  92          
+  93          //void myPwm();
+  94          void noVoice();
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          void main()
+ 101          {
+ 102   1              unsigned int newAddr=0;
+ 103   1              unsigned char Check=0;//×÷ÎªAD¼ì²âÖµ
+ 104   1      
+ 105   1      
+ 106   1              noVoice();
+ 107   1              InitUART();
+ 108   1              InitT0();
+ 109   1              TI=0;
+ 110   1              RI=0;
+ 111   1      
+ 112   1              ES=1;
+ 113   1              PS=1;
+ 114   1              EA=1;
+ 115   1      
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 3   
+
+ 116   1              while(1)
+ 117   1              {
+ 118   2                      Check=GetADCResult(5);//Ê°É«Æ÷µÄ¼ì²â
+ 119   2                      if(Check>=0x99)//ÉèÖÃ±È½ÏµçÑ¹£¬´Ë´¦Îª3VÉèÖÃ
+ 120   2                      {
+ 121   3                              VoiceControl=0;
+ 122   3                      }
+ 123   2                      else
+ 124   2                      {
+ 125   3                              VoiceControl=1;
+ 126   3                      }
+ 127   2      
+ 128   2                      Check=GetADCResult(6);//µç³ØµçÁ¿¼ì²â
+ 129   2                      if(Check<=0xcc)//ÉèÖÃ±È½ÏµçÑ¹£¬´Ë´¦Îª4V
+ 130   2                      {
+ 131   3                              SC_Speech(0x10);//µçÑ¹²»×ãÌáÊ¾  
+ 132   3                      }
+ 133   2      
+ 134   2      
+ 135   2                      if(receiveFlag==1)
+ 136   2                      {
+ 137   3                              receiveFlag=0;  //Çå½ÓÊÕ±êÖ¾
+ 138   3                              transCode(TxRxBuf,0x1c);//½«½ÓÊÕµ½µÃÊý¾Ý½âÂë
+ 139   3      
+ 140   3      
+ 141   3      
+ 142   3                              //½âÎöÃüÁî
+ 143   3                              switch(myTxRxData[2]) //¶ÔÊý¾ÝÖ¡ÀïµÄÃüÁî½øÐÐ´¦Àí
+ 144   3                              {
+ 145   4                                      case CmdStart://ÈôÊÇ¿ª»úÖ¸Áî£¬Ö´ÐÐ¿ª»ú²Ù×÷
+ 146   4                                      {
+ 147   5                                              ET0=1;//ÔÚ¿ª»úÖ¸ÁîÖÐ¿ªÆô¶¨Ê±Æ÷0
+ 148   5      
+ 149   5                                              ModeControl_1=0; //·¢Éä»úÄ£Ê½¿ØÖÆ¶Ë,¿ª»úÊ±Îª30MÄ£Ê½£¬¼´´ËµÆÁÁ
+ 150   5                                          VoiceControl=0;//¿ª»úÊ±Ö÷»ú¿ªÊ§ÉùÆ÷
+ 151   5                                              //ÔÚÕâÀï¼ÓÈë¿ª»úµÄÊ±ºòÒª×öµÄÊÂÇé
+ 152   5      
+ 153   5                                              SC_Speech(0x07);        //¿ª»úÓïÑÔÌáÐÑ
+ 154   5                                      }
+ 155   4                                      break;
+ 156   4                                      case CmdStop:     //ÈôÊÇ¹Ø»úÖ¸Áî£¬Ö´ÐÐ¹Ø»ú²Ù×÷
+ 157   4                                      {
+ 158   5                                              ET0=0;//ÔÚ¿ª»úÖ¸ÁîÖÐ¿ªÆô¶¨Ê±Æ÷0
+ 159   5      
+ 160   5                                               //ÔÚÕâÀï¼ÓÈë¹Ø»úµÄÊ±ºòÒª×öµÄÊÂÇé
+ 161   5      
+ 162   5                                              SC_Speech(0x08);  //¹Ø»úÓïÑÔÌáÐÑ
+ 163   5                                      }
+ 164   4                                      break;
+ 165   4                                      case ComMode_1:  //¸½»ú·¢ËÍ¹ýÀ´µÄÖ»ÓÃÄ£Ê½1£¬Êý¾Ý²¿·ÖÎªÊý×éµÄµÚÒ»ºÍµÚ¶þ¸ö×Ö½Ú£¬ÎªÃÜÂë±íÄÚµÄÕâ¸ö±àÂëµÄ¿ª
+             -Ê¼×Ö½ÚµÄÄÇ¸öµØÖ·£¬È»ºóÌî³äÊý¾ÝÖ¡£¬°ÑÃÜÂë±íµÄÊý¾Ý·¢ËÍ³öÈ¥
+ 166   4                                      {
+ 167   5                                                      newAddr=(newAddr|myTxRxData[2])<<8;//¸ß°ËÎ»
+ 168   5                                                      newAddr=newAddr+myTxRxData[1];             //µÍ°ËÎ»
+ 169   5      
+ 170   5                                                      if(PassWord[newAddr]==myTxRxData[3]&&PassWord[newAddr+1]==myTxRxData[4])//ÃÜÂë±í¶ÔµÄ×¡
+ 171   5                                                      {
+ 172   6                                                              if(newAddr==0&&((lastAddr-newAddr)>=997))
+ 173   6                                                              {
+ 174   7                                                                      ACKCount++;
+ 175   7                                                                      TestFlag=0;//Õý³£Çé¿ö£¬Ã¿ÊÕµ½3´ÎÊý¾Ý»Ø¸´Ò»´ÎÈ·ÈÏÐÅºÅ
+ 176   7                                                                      lastAddr=newAddr;
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 4   
+
+ 177   7                                                                      if(ModeFlag==2||ModeFlag==3)
+ 178   7                                                                      {
+ 179   8                                                                              SC_Speech(0x01);        //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
+ 180   8                                                                      }
+ 181   7                                                              }
+ 182   6      //                                                      else if(newAddr<=1000&&(newAddr-lastAddr<=3))
+ 183   6                                                              else if((newAddr-lastAddr)<=3)
+ 184   6                                                              {
+ 185   7                                                                      ACKCount++;
+ 186   7                                                                      TestFlag=0;//Õý³£Çé¿ö£¬Ã¿ÊÕµ½3´ÎÊý¾Ý»Ø¸´Ò»´ÎÈ·ÈÏÐÅºÅ
+ 187   7                                                                      lastAddr=newAddr;
+ 188   7                                                                      if(ModeFlag==2||ModeFlag==3)
+ 189   7                                                                      {
+ 190   8                                                                              SC_Speech(0x01);        //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
+ 191   8                                                                      }
+ 192   7                                                              }
+ 193   6      
+ 194   6                                                      }
+ 195   5      
+ 196   5                                      }
+ 197   4                                      break;
+ 198   4                              }
+ 199   3      
+ 200   3                      }
+ 201   2      
+ 202   2      
+ 203   2      
+ 204   2                      if(ACKCount==3)//ËµÃ÷½ÓÊÕµ½ÁË3´Î¸½»úµÄÊý¾Ý£¬Ïò¸½»úÒÔÄ£Ê½1À´»Ø¸´Êý¾Ý£¬×÷ÎªÈ·ÈÏÐÅºÅ
+ 205   2                      {
+ 206   3                                      ACKCount=0;
+ 207   3                                      ComMode_1_Data(newAddr);
+ 208   3                      }
+ 209   2      
+ 210   2      
+ 211   2      
+ 212   2      
+ 213   2              }
+ 214   1      
+ 215   1      }
+ 216          
+ 217          
+ 218          
+ 219          
+ 220          
+ 221          void uart_isr() interrupt 4 
+ 222          {
+ 223   1              if(RI)
+ 224   1              {
+ 225   2                      RI=0;
+ 226   2                      TxRxBuf[count]=SBUF;
+ 227   2                      if(count==0&&TxRxBuf[0]==CmdHead1)
+ 228   2                      {
+ 229   3                              count=1;
+ 230   3                      }
+ 231   2                      else if(count==1&&TxRxBuf[1]==CmdHead2)
+ 232   2                      {
+ 233   3                              count=2;
+ 234   3                      }
+ 235   2                      else if(count==2&&TxRxBuf[2]==CmdHead3)
+ 236   2                      {
+ 237   3                              count=3;
+ 238   3                      }
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 5   
+
+ 239   2                      else if(count==3&&TxRxBuf[3]==CmdHead4)
+ 240   2                      {
+ 241   3                              count=4;
+ 242   3                      }
+ 243   2      
+ 244   2      
+ 245   2      
+ 246   2                      else if(count==4&&TxRxBuf[4]==MyAddress1)
+ 247   2                      {
+ 248   3                              count=5;
+ 249   3      
+ 250   3                      }
+ 251   2                      else if(count==5&&TxRxBuf[5]==MyAddress2)
+ 252   2                      {
+ 253   3                              count=6;
+ 254   3      
+ 255   3                      }
+ 256   2                      else if(count==6&&TxRxBuf[6]==MyAddress3)
+ 257   2                      {
+ 258   3                              count=7;
+ 259   3      
+ 260   3                      }
+ 261   2                      else if(count==7&&TxRxBuf[7]==MyAddress4)
+ 262   2                      {
+ 263   3                              count=8;
+ 264   3      
+ 265   3                      }
+ 266   2      
+ 267   2      
+ 268   2      
+ 269   2                      else if(count>=8&&count<=27)
+ 270   2                      {
+ 271   3                              count++;
+ 272   3                      }
+ 273   2                      else if(count==28)
+ 274   2                      {
+ 275   3                              receiveFlag=1;
+ 276   3                              count=0;
+ 277   3                      }
+ 278   2                      else 
+ 279   2                      {
+ 280   3                              count=0;
+ 281   3                      }
+ 282   2              }
+ 283   1      }
+ 284          
+ 285          
+ 286          
+ 287          void time0() interrupt 1        //×÷ÎªÕû¸öÏµÍ³×Ô¼ºµÄÊ±ÖÓ
+ 288          {
+ 289   1              bit Between=1;//¼ì²âÈýÖá´«¸ÐÆ÷ÊÇÊ¹ÓÃ
+ 290   1      
+ 291   1              TH0=0xff;//ÖØ×°ÔØ
+ 292   1              TL0=0xa3;
+ 293   1      
+ 294   1              time0Count_3++;
+ 295   1      
+ 296   1      
+ 297   1      
+ 298   1                      if(time0Count_3>=13000)//´®¿ÚÃ¿1S½ÓÊÜÒ»´ÎµÄÊý¾ÝµÄÊ±¼ä±êÖ¾
+ 299   1                      {
+ 300   2                      TestFlag++;
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 6   
+
+ 301   2                      if(TestFlag>=4&&ModeFlag==1)//ËµÃ÷Ã»ÓÐ½ÓÊÕµ½Êý¾ÝÒÑ¾­ÓÐ3´ÎÁË£¬¸½»úÒÑ¾­³öÁË3M£¬ÏÖÔÚ¾ÍÒª¼Ó´ó¹¦ÂÊ£¬ÇÐ»»µ½Ä£Ê
+             -½2,30MÔÙ¿´ÄÜ²»ÄÜ½ÓÊÕµ½Êý¾Ý
+ 302   2                      {
+ 303   3                              
+ 304   3                              ComMode_2_Data(lastAddr);
+ 305   3      
+ 306   3      
+ 307   3      
+ 308   3      //                      MagentControl_1=0;
+ 309   3      //                      MagentControl_2=0;        //µç´ÅÌú±ä¼«ÐÔ
+ 310   3      //
+ 311   3      //                      SensorControl=0;//¿ªÆôÈýÖá´«¸ÐÆ÷
+ 312   3      
+ 313   3      
+ 314   3                              SC_Speech(0x03);//ÓïÒô±¨¾¯
+ 315   3                              
+ 316   3      
+ 317   3      
+ 318   3      
+ 319   3                              ModeFlag=2;
+ 320   3                      
+ 321   3                      }
+ 322   2                      if(ModeFlag==2)
+ 323   2                      {
+ 324   3                              
+ 325   3                              ComMode_2_Data(lastAddr);
+ 326   3                      }
+ 327   2                      if(ModeFlag==2&&time0Count_4>=20)//ÈýÖá´«¸ÐÆ÷Âö³å¼ÆÊýÒÑ¾­´óÓÚ20ÁË
+ 328   2                      {
+ 329   3                              ModeControl_1=1;//ÇÐ»»µ½300M¹¦ÂÊ·¢ËÍ
+ 330   3                              time0Count_4=0;
+ 331   3      
+ 332   3              
+ 333   3                              ComMode_3_Data(lastAddr);
+ 334   3              
+ 335   3      
+ 336   3                                      
+ 337   3      
+ 338   3                              MagentControl_1=0;
+ 339   3                              MagentControl_2=0;        //µç´ÅÌú±ä¼«ÐÔ
+ 340   3      
+ 341   3      
+ 342   3      //                      Voice(4);//¿ª¹¦·Å½øÐÐ±¨¾¯
+ 343   3                              SC_Speech(0x02);
+ 344   3      
+ 345   3                              ModeFlag=3;
+ 346   3      
+ 347   3                      }
+ 348   2                      if(ModeFlag==3)
+ 349   2                      {
+ 350   3                      
+ 351   3                              ComMode_3_Data(lastAddr);
+ 352   3              
+ 353   3                      }
+ 354   2      
+ 355   2      
+ 356   2                      time0Count_3=0;
+ 357   2      
+ 358   2      
+ 359   2                      }
+ 360   1      
+ 361   1              
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 7   
+
+ 362   1              
+ 363   1                      if(SensorControl==0)//ÈýÖá´«¸ÐÆ÷µÄÊäÈë·½²¨¼ì²âÊ±¼ä¿ØÖÆ
+ 364   1                      {       if(ReceWave!=Between)
+ 365   2                              {
+ 366   3                                      
+ 367   3                                      Between=~Between;
+ 368   3                                      time0Count_4++;
+ 369   3                      
+ 370   3                              }
+ 371   2                      }
+ 372   1      }
+ 373          
+ 374          
+ 375          
+ 376          
+ 377          void ComMode_1_Data(unsigned int sendAddr)//·¢ËÍ±ßÂë1
+ 378          {
+ 379   1              ModeControl_1=0;//30M·¢Éä¹¦ÂÊ                           
+ 380   1              myPwm();        //¿ª·¢Éä»ú
+ 381   1      //                      ModeTurn=0;
+ 382   1      
+ 383   1      
+ 384   1              myTxRxData[0]=CmdHead;
+ 385   1              myTxRxData[1]=MyAddress;
+ 386   1      
+ 387   1              myTxRxData[2]=ComMode_1;
+ 388   1      
+ 389   1              myTxRxData[5]=PassWord[sendAddr];
+ 390   1              myTxRxData[6]=PassWord[sendAddr+1];
+ 391   1      
+ 392   1              myTxRxData[3]=sendAddr;
+ 393   1              myTxRxData[4]=sendAddr>>8;
+ 394   1      
+ 395   1              codeData(myTxRxData,7);
+ 396   1      
+ 397   1              SendNByte(TxRxBuf,28);
+ 398   1      
+ 399   1              PWMCON0=0x00;//¹Ø±ÕPWM
+ 400   1              P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
+ 401   1              P0M2=0;
+ 402   1      }
+ 403          
+ 404          
+ 405          
+ 406          
+ 407          void ComMode_2_Data(unsigned int sendAddr)//·¢ËÍ±ßÂë2
+ 408          {
+ 409   1              ModeControl_1=0;//30M·¢Éä¹¦ÂÊ
+ 410   1              myPwm();        //¿ª·¢Éä»ú
+ 411   1      //                      ModeTurn=0;
+ 412   1      
+ 413   1      
+ 414   1              myTxRxData[0]=CmdHead;
+ 415   1              myTxRxData[1]=MyAddress;
+ 416   1      
+ 417   1              myTxRxData[2]=ComMode_2;
+ 418   1      
+ 419   1              myTxRxData[5]=PassWord[sendAddr];
+ 420   1              myTxRxData[6]=PassWord[sendAddr+1];
+ 421   1      
+ 422   1              myTxRxData[3]=sendAddr;
+ 423   1              myTxRxData[4]=sendAddr>>8;
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 8   
+
+ 424   1      
+ 425   1              codeData(myTxRxData,7); //½øÐÐ±àÂë
+ 426   1      
+ 427   1              SendNByte(TxRxBuf,28);
+ 428   1      
+ 429   1              PWMCON0=0x00;//¹Ø±ÕPWM
+ 430   1              P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
+ 431   1              P0M2=0;
+ 432   1      }
+ 433          
+ 434          
+ 435          
+ 436          void ComMode_3_Data(unsigned int sendAddr)//·¢ËÍ±ßÂë3
+ 437          {
+ 438   1              ModeControl_1=1;//ÇÐ»»Îª300M·¢Éä
+ 439   1              myPwm();        //¿ª·¢Éä»ú
+ 440   1      //                      ModeTurn=0;
+ 441   1      
+ 442   1      
+ 443   1              myTxRxData[0]=CmdHead;
+ 444   1              myTxRxData[1]=MyAddress;
+ 445   1      
+ 446   1              myTxRxData[2]=ComMode_3;
+ 447   1      
+ 448   1              myTxRxData[5]=PassWord[sendAddr];
+ 449   1              myTxRxData[6]=PassWord[sendAddr+1];
+ 450   1      
+ 451   1              myTxRxData[3]=sendAddr;
+ 452   1              myTxRxData[4]=sendAddr>>8;
+ 453   1      
+ 454   1              codeData(myTxRxData,7); //½øÐÐ±àÂë
+ 455   1      
+ 456   1              SendNByte(TxRxBuf,28);
+ 457   1      
+ 458   1              PWMCON0=0x00;//¹Ø±ÕPWM
+ 459   1              P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
+ 460   1              P0M2=0;
+ 461   1      }
+ 462          
+ 463          
+ 464          
+ 465          
+ 466          void codeData(unsigned char *doData,unsigned char len)          //±àÂë ,µçÆ½1±äÎª0011£¬µçÆ½0±äÎª1100
+ 467          {
+ 468   1              unsigned char n,j,i=0;
+ 469   1              for(n=0;n<len;n++)
+ 470   1              {       
+ 471   2                      i+=4;
+ 472   2                      for(j=0;j<8;j++)        
+ 473   2                      {
+ 474   3                              if(j==0||j==1)
+ 475   3                              {
+ 476   4                                      if(*doData&0x01==0x01)
+ 477   4                                      {
+ 478   5                                              TxRxBuf[i]=0x03;
+ 479   5                                              TxRxBuf[i]<<=4;
+ 480   5                                              *doData>>=1;    
+ 481   5                                      }
+ 482   4                                      else
+ 483   4                                      {
+ 484   5                                              TxRxBuf[i]=0x0c;
+ 485   5                                              TxRxBuf[i]<<=4;
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 9   
+
+ 486   5                                              *doData>>=1;
+ 487   5                                      }
+ 488   4                              }
+ 489   3                              else if(j==2||j==3)
+ 490   3                              {
+ 491   4                                      if(*doData&0x01==0x01)
+ 492   4                                      {
+ 493   5                                              TxRxBuf[i+1]=0x03;
+ 494   5                                              TxRxBuf[i+1]<<=4;
+ 495   5                                              *doData>>=1;    
+ 496   5                                      }
+ 497   4                                      else
+ 498   4                                      {
+ 499   5                                              TxRxBuf[i+1]=0x0c;
+ 500   5                                              TxRxBuf[i+1]<<=4;
+ 501   5                                              *doData>>=1;
+ 502   5                                      }
+ 503   4                              }
+ 504   3                              else if(j==4||j==5)
+ 505   3                              {
+ 506   4                                      if(*doData&0x01==0x01)
+ 507   4                                      {
+ 508   5                                              TxRxBuf[i+2]=0x03;
+ 509   5                                              TxRxBuf[i+2]<<=4;
+ 510   5                                              *doData>>=1;    
+ 511   5                                      }
+ 512   4                                      else
+ 513   4                                      {
+ 514   5                                              TxRxBuf[i+2]=0x0c;
+ 515   5                                              TxRxBuf[i+2]<<=4;
+ 516   5                                              *doData>>=1;
+ 517   5                                      }
+ 518   4                              }
+ 519   3                              else if(j==6||j==7)
+ 520   3                              {
+ 521   4                                      if(*doData&0x01==0x01)
+ 522   4                                      {
+ 523   5                                              TxRxBuf[i+3]=0x03;
+ 524   5                                              TxRxBuf[i+3]<<=4;
+ 525   5                                              *doData>>=1;    
+ 526   5                                      }
+ 527   4                                      else
+ 528   4                                      {
+ 529   5                                              TxRxBuf[i+3]=0x0c;
+ 530   5                                              TxRxBuf[i+3]<<=4;
+ 531   5                                              *doData>>=1;
+ 532   5                                      }
+ 533   4                              }
+ 534   3      
+ 535   3                      }
+ 536   2      
+ 537   2                      doData++;
+ 538   2              }
+ 539   1      }
+ 540          
+ 541          void transCode(unsigned char *doData,unsigned char len)//½âÂë£¬½«½ÓÊÕµ½µÃÊý¾Ý»¹Ô­
+ 542          {
+ 543   1              unsigned char i,j,temp;
+ 544   1              for(i=0;i<len;i++)
+ 545   1              {
+ 546   2                      for(j=0;j<2;j++)
+ 547   2                      {
+C51 COMPILER V9.01   NEWHOST                                                               10/31/2012 21:29:32 PAGE 10  
+
+ 548   3                              if(*doData&0x30==0x30)//ËµÃ÷Îª1
+ 549   3                              {
+ 550   4                                      myTxRxData[i/4]|=0x01;
+ 551   4                                      myTxRxData[i/4]<<=1;
+ 552   4                                      *doData<<=4;
+ 553   4                              }
+ 554   3                              else  //ËµÃ÷Îª0
+ 555   3                              {
+ 556   4                                      myTxRxData[i/4]&=0xfe;
+ 557   4                                      myTxRxData[i/4]<<=1;
+ 558   4                                      *doData<<=4;
+ 559   4                              }
+ 560   3                      }
+ 561   2                      doData++;
+ 562   2                              
+ 563   2              }
+ 564   1              for(i=0;i<7;i++)//Êý¾Ýµ¹¸öÎ»
+ 565   1              {
+ 566   2                      for(j=0;j<8;j++)
+ 567   2                      {
+ 568   3                              if(myTxRxData[i]&0x01==0x01)
+ 569   3                              {
+ 570   4                                      temp+=1;
+ 571   4                                      temp<<=1;
+ 572   4                              }
+ 573   3                              else
+ 574   3                              {
+ 575   4                                      temp<<=1;
+ 576   4                              }
+ 577   3                      }
+ 578   2                      myTxRxData[i]=temp;
+ 579   2              }
+ 580   1      }
+ 581          
+ 582          
+ 583          
+ 584          
+ 585          
+ 586          
+*** WARNING C291 IN LINE 104 OF NEWHOST.C: not every exit path returns a value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2070    ----
+   CONSTANT SIZE    =   1000    ----
+   XDATA SIZE       =     46      17
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,34 @@
+C51 COMPILER V9.01   T1                                                                    05/04/2013 18:16:16 PAGE 1   
+
+
+C51 COMPILER V9.01, COMPILATION OF MODULE T1
+OBJECT MODULE PLACED IN .\out\T1.obj
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE T1.c BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\T1.lst) OBJECT(.\out\T1.obj)
+
+line level    source
+
+   1          #include "N79E81x.h"
+   2          #include"T1.h"
+   3          
+   4          
+   5          void InitT1()
+   6          {
+   7   1              TMOD=0x11;//定时器1采用1方式
+   8   1              TH1=timer1H;
+   9   1              TL1=timer1L;
+  10   1              TR1=1;
+  11   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     12    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

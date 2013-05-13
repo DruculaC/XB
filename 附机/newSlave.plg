@@ -1,0 +1,519 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\myPC\工程方案\方圆介绍\实验\华邦芯片实验\新建整体\附机\newSlave.uvproj
+Project File Date:  10/31/2012
+
+<h2>Output:</h2>
+compiling newSlave.c...
+C:\KEIL\C51\INC\ATMEL\REG51.H(13): error C231: 'P0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(14): error C231: 'P1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(15): error C231: 'P2': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(16): error C231: 'P3': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(17): error C231: 'PSW': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(18): error C231: 'ACC': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(19): error C231: 'B': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(20): error C231: 'SP': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(21): error C231: 'DPL': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(22): error C231: 'DPH': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(23): error C231: 'PCON': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(24): error C231: 'TCON': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(25): error C231: 'TMOD': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(26): error C231: 'TL0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(27): error C231: 'TL1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(28): error C231: 'TH0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(29): error C231: 'TH1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(30): error C231: 'IE': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(31): error C231: 'IP': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(32): error C231: 'SCON': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(33): error C231: 'SBUF': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(38): error C231: 'CY': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(39): error C231: 'AC': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(40): error C231: 'F0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(41): error C231: 'RS1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(42): error C231: 'RS0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(43): error C231: 'OV': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(44): error C231: 'P': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(47): error C231: 'TF1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(48): error C231: 'TR1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(49): error C231: 'TF0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(50): error C231: 'TR0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(51): error C231: 'IE1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(52): error C231: 'IT1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(53): error C231: 'IE0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(54): error C231: 'IT0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(57): error C231: 'EA': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(58): error C231: 'ES': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(59): error C231: 'ET1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(60): error C231: 'EX1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(61): error C231: 'ET0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(62): error C231: 'EX0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(65): error C231: 'PS': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(66): error C231: 'PT1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(67): error C231: 'PX1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(68): error C231: 'PT0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(69): error C231: 'PX0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(75): error C231: 'T0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(76): error C231: 'INT1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(77): error C231: 'INT0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(78): error C231: 'TXD': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(79): error C231: 'RXD': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(82): error C231: 'SM0': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(83): error C231: 'SM1': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(84): error C231: 'SM2': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(85): error C231: 'REN': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(86): error C231: 'TB8': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(87): error C231: 'RB8': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(88): error C231: 'TI': redefinition
+C:\KEIL\C51\INC\ATMEL\REG51.H(89): error C231: 'RI': redefinition
+PWM.H(28): error C231: 'P0M1': redefinition
+PWM.H(32): error C231: 'P2M1': redefinition
+PWM.H(34): error C231: 'P3M1': redefinition
+newSlave.c - 63 Error(s), 0 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(90): warning C206: 'codeData': missing function-prototype
+NEWSLAVE.C(90): error C267: 'codeData': requires ANSI-style prototype
+NEWSLAVE.C(110): error C231: 'codeData': redefinition
+NEWSLAVE.C(174): error C231: 'codeData': redefinition
+newSlave.c - 3 Error(s), 1 Warning(s).
+compiling newSlave.c...
+UART.H(36): error C129: missing ';' before 'code'
+newSlave.c - 1 Error(s), 0 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(148): error C202: 'VoiceControl': undefined identifier
+NEWSLAVE.C(152): error C202: 'VoiceControl': undefined identifier
+NEWSLAVE.C(297): error C202: 'count': undefined identifier
+NEWSLAVE.C(298): error C202: 'count': undefined identifier
+NEWSLAVE.C(300): error C202: 'count': undefined identifier
+NEWSLAVE.C(302): error C202: 'count': undefined identifier
+NEWSLAVE.C(304): error C202: 'count': undefined identifier
+NEWSLAVE.C(306): error C202: 'count': undefined identifier
+NEWSLAVE.C(308): error C202: 'count': undefined identifier
+NEWSLAVE.C(310): error C202: 'count': undefined identifier
+NEWSLAVE.C(312): error C202: 'count': undefined identifier
+NEWSLAVE.C(317): error C202: 'count': undefined identifier
+NEWSLAVE.C(319): error C202: 'count': undefined identifier
+NEWSLAVE.C(322): error C202: 'count': undefined identifier
+NEWSLAVE.C(324): error C202: 'count': undefined identifier
+NEWSLAVE.C(327): error C202: 'count': undefined identifier
+NEWSLAVE.C(329): error C202: 'count': undefined identifier
+NEWSLAVE.C(332): error C202: 'count': undefined identifier
+NEWSLAVE.C(334): error C202: 'count': undefined identifier
+NEWSLAVE.C(339): error C202: 'count': undefined identifier
+NEWSLAVE.C(341): error C202: 'count': undefined identifier
+NEWSLAVE.C(343): error C202: 'count': undefined identifier
+NEWSLAVE.C(346): error C202: 'count': undefined identifier
+NEWSLAVE.C(350): error C202: 'count': undefined identifier
+newSlave.c - 24 Error(s), 0 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(302): error C202: 'count': undefined identifier
+NEWSLAVE.C(303): error C202: 'count': undefined identifier
+NEWSLAVE.C(305): error C202: 'count': undefined identifier
+NEWSLAVE.C(307): error C202: 'count': undefined identifier
+NEWSLAVE.C(309): error C202: 'count': undefined identifier
+NEWSLAVE.C(311): error C202: 'count': undefined identifier
+NEWSLAVE.C(313): error C202: 'count': undefined identifier
+NEWSLAVE.C(315): error C202: 'count': undefined identifier
+NEWSLAVE.C(317): error C202: 'count': undefined identifier
+NEWSLAVE.C(322): error C202: 'count': undefined identifier
+NEWSLAVE.C(324): error C202: 'count': undefined identifier
+NEWSLAVE.C(327): error C202: 'count': undefined identifier
+NEWSLAVE.C(329): error C202: 'count': undefined identifier
+NEWSLAVE.C(332): error C202: 'count': undefined identifier
+NEWSLAVE.C(334): error C202: 'count': undefined identifier
+NEWSLAVE.C(337): error C202: 'count': undefined identifier
+NEWSLAVE.C(339): error C202: 'count': undefined identifier
+NEWSLAVE.C(344): error C202: 'count': undefined identifier
+NEWSLAVE.C(346): error C202: 'count': undefined identifier
+NEWSLAVE.C(348): error C202: 'count': undefined identifier
+NEWSLAVE.C(351): error C202: 'count': undefined identifier
+NEWSLAVE.C(355): error C202: 'count': undefined identifier
+newSlave.c - 22 Error(s), 0 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(384): warning C206: 'ComMode_1_Data': missing function-prototype
+NEWSLAVE.C(384): error C267: 'ComMode_1_Data': requires ANSI-style prototype
+NEWSLAVE.C(493): error C129: missing ';' before 'StopAll'
+newSlave.c - 2 Error(s), 1 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(384): warning C206: 'ComMode_1_Data': missing function-prototype
+NEWSLAVE.C(384): error C267: 'ComMode_1_Data': requires ANSI-style prototype
+NEWSLAVE.C(520): error C231: 'ComMode_1_Data': redefinition
+NEWSLAVE.C(544): error C231: 'ComMode_1_Data': redefinition
+newSlave.c - 3 Error(s), 1 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+newSlave.c - 0 Error(s), 1 Warning(s).
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+newSlave.c - 0 Error(s), 1 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 10 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Load "E:\\myPC\\工程方案\\方圆介绍\\实验\\华邦芯片实验\\新建整体\\附机\\out\\newSlave" 
+Flash Erase Done.
+Flash Write Done: 3012 bytes programmed.
+Flash Verify Done: 3012 bytes verified.
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newSlave.c...
+NEWSLAVE.C(104): warning C291: not every exit path returns a value
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?GETDATA?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GAINSUM?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_DELAY_MS?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PWM_PIN_RECOVER_IO?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?ENABLED_BRAKE_FUNCTION?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?STARALL?NEWSLAVE
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_TRANSCODE?NEWSLAVE
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?_SC_SPEECH?NEWSLAVE
+    CALLER1: ?C_C51STARTUP
+    CALLER2: ?PR?TIME0?NEWSLAVE
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  STARTALL
+    MODULE:  .\out\newSlave.obj (NEWSLAVE)
+    ADDRESS: 0469H
+Program Size: data=69.3 xdata=0 code=3012
+creating hex file from ".\out\newSlave"...
+".\out\newSlave" - 0 Error(s), 11 Warning(s).
+Load "E:\\myPC\\工程方案\\方圆介绍\\实验\\华邦芯片实验\\新建整体\\附机\\out\\newSlave" 
+Flash Erase Done.
+Flash Write Done: 3012 bytes programmed.
+Flash Verify Done: 3012 bytes verified.

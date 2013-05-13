@@ -1,0 +1,39 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+C:\Users\richard\Desktop\bag - 副本\主机\newHost.uvproj
+Project File Date:  04/16/2013
+
+<h2>Output:</h2>
+Build target 'Target 1'
+assembling STARTUP.A51...
+compiling newHost.c...
+compiling AD.c...
+AD.C(109): warning C291: not every exit path returns a value
+compiling PWM.c...
+compiling T0.c...
+compiling UART.c...
+compiling VOICE.c...
+compiling T1.c...
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?COMMODE_1_DATA?NEWHOST
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?COMMODE_4_DATA?NEWHOST
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?COMMODE_5_DATA?NEWHOST
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITUART?UART
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SENDNBYTE?UART
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_SELECT?UART
+*** WARNING L15: MULTIPLE CALL TO SEGMENT
+    SEGMENT: ?PR?INITSIGNAL?NEWHOST
+    CALLER1: ?PR?TIMET1?NEWHOST
+    CALLER2: ?PR?TIME0?NEWHOST
+Program Size: data=10.5 xdata=79 code=3630
+creating hex file from ".\out\newHost"...
+".\out\newHost" - 0 Error(s), 8 Warning(s).
