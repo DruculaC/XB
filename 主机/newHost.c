@@ -166,32 +166,60 @@ void Delay33(unsigned int t)
 void initsignal()
 {
 	unsigned char k,k1;
-	unsigned char mystartbuffer=0xaa;
-	for(k1=0;k1<3;k1++)
+	unsigned char mystartbuffer=0xb4;
+	for(k1=0;k1<8;k1++)
 	{
 		for(k=0;k<8;k++)
 		{
 			if((mystartbuffer&0x80)==0x80)//为1
 			{
 				P10=0;
-				Delay3(80);//延时4.5ms以上，由于定时器占用问题，只能用这种延时来实现
+				Delay3(300);//延时4.5ms以上，由于定时器占用问题，只能用这种延时来实现
 			}
 			else//为0的情况
 			{
 				P10=0;
-				Delay3(80);//延时2ms，由于定时器占用问题，只能用这种延时来实现
+				Delay3(300);//延时2ms，由于定时器占用问题，只能用这种延时来实现
 			}
 			P10=1;//常态为高电平
 			mystartbuffer<<=1;
-			Delay3(150);//延时要大于2ms
+			Delay3(100);//延时要大于2ms
 		}
 		mystartbuffer=0xaa;
-		Delay3(150);
+		Delay3(50);
 	}
 	P10=1;
-	Delay3(80);
+//	Delay3(80);
 }
 
+void initsignal2()
+{
+	unsigned char k,k1;
+	unsigned char mystartbuffer=0xb4;
+	for(k1=0;k1<8;k1++)
+	{
+		for(k=0;k<8;k++)
+		{
+			if((mystartbuffer&0x80)==0x80)//为1
+			{
+				P10=0;
+				Delay3(205);//延时4.5ms以上，由于定时器占用问题，只能用这种延时来实现
+			}
+			else//为0的情况
+			{
+				P10=0;
+				Delay3(205);//延时2ms，由于定时器占用问题，只能用这种延时来实现
+			}
+			P10=1;//常态为高电平
+			mystartbuffer<<=1;
+			Delay3(70);//延时要大于2ms
+		}
+		mystartbuffer=0xaa;
+		Delay3(35);
+	}
+	P10=1;
+//	Delay3(80);
+}
 void main()
 {
 //	unsigned int newAddr=0;
@@ -240,6 +268,9 @@ void main()
 	Check2=GetADCResult(6);		//电量检测
 	powerflag=0;
 	turnflag=0;
+
+	SensorControl=0;
+
 	while(1)
 	{
 //		Delay(500);
@@ -342,7 +373,7 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 				DataTime++;
 				T1highcount=0;
 			}
-			else if((DataBetween>100))//低电平持续的时间大于4.5ms，则为1
+			else if((DataBetween>100))//低电平持续的时间大于10ms，则为1
 			{
 				RecData<<=1;
 				RecData |= 0x01;
@@ -360,7 +391,7 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 		else
 		{
 			T1highcount++;
-			if(T1highcount>=120)
+			if(T1highcount>=150)
 			{
 				DataTime=0;
 				ComFlag=1;
@@ -401,6 +432,7 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 	{
 		receiveFlag=0;
 		SwitchControl=1;
+//		SwitchControl=1;
 //		transCode(TxRxBuf,0x1c);//将接收到得数据解码	
 //		解析命令
 		switch(myTxRxData[2]) //对数据帧里的命令进行处理
@@ -651,7 +683,7 @@ void time0() interrupt 1	//作为整个系统自己的时钟
 
 			if(TestFlag>=3&&ModeFlag==1)//说明没有接收到数据已经有3次了，附机已经出了3M，现在就要加大功率，切换到模式2,30M再看能不能接收到数据
 			{
-				TestFlag=4;
+				TestFlag=5;
 				if(ModeFlag==1)
 				{
 //					ComMode_2_Data(lastAddr);//向附机发送编码2
@@ -681,7 +713,9 @@ void time0() interrupt 1	//作为整个系统自己的时钟
 			}
 		}
 		time0Count_3=0;
+		
 		Check1=GetADCResult(5);//拾音器的检测
+		
 		Check2=GetADCResult(6);//电量检测
 	}
 
@@ -690,7 +724,7 @@ void time0() interrupt 1	//作为整个系统自己的时钟
 		if(ReceWave==0)//说明有触发情况，开始计时
 		{
 			time0Count_2++;
-			if(time0Count_2>=10)//说明已经大于0.5S
+			if(time0Count_2>=30)//说明已经大于0.5S
 			{
 				time0Count_2 =0;//计时期清零
 				SensorCount++;//三轴传感器脉冲计数加1
@@ -765,7 +799,10 @@ void time0() interrupt 1	//作为整个系统自己的时钟
 			PAshutdown=0;
 			VoiceControl=1;//开启拾声器
 		}
-		ComMode_3_Data(); //向附机发送编码3
+		if(ModeFlag==3)
+		{
+			ComMode_3_Data(); //向附机发送编码3
+		}
 		if(alarmFlag==1)
 		{
 			VoiceControl=0;//使用语音时要关闭拾声器
@@ -784,7 +821,10 @@ void time0() interrupt 1	//作为整个系统自己的时钟
 			PAshutdown=0;
 			VoiceControl=1;//开启拾声器
 		}
-		ComMode_3_Data(); //向附机发送编码3
+		if(ModeFlag==3)
+		{
+			ComMode_3_Data(); //向附机发送编码3
+		}
 		if(alarmCount>=20) //调节语音的段数
 		{
 			alarmCount=0;//清报警计数器
@@ -817,7 +857,7 @@ void ComMode_1_Data()//发送边码1
 	myTxRxData[5]=0x00;
 	myTxRxData[6]=0x00;
 
-	initsignal();													   
+	initsignal2();													   
 
 	for(i=0;i<7;i++)
 	{
@@ -870,7 +910,7 @@ void ComMode_2_Data()//发送边码2
 	myTxRxData[5]=0x00;
 	myTxRxData[6]=0x00;
 
-	initsignal();
+	initsignal2();
 
 	for(i=0;i<7;i++)
 	{
@@ -958,7 +998,7 @@ void ComMode_3_Data()//发送边码3
 	myTxRxData[5]=0x00;
 	myTxRxData[6]=0x00;
 
-	initsignal();
+	initsignal2();
 
 	for(i=0;i<7;i++)
 	{
@@ -1011,7 +1051,7 @@ void ComMode_4_Data()//发送抬起编码
 	myTxRxData[5]=0x00;
 	myTxRxData[6]=0x00;
 
-	initsignal();
+	initsignal2();
 
 	for(i=0;i<7;i++)
 	{
@@ -1063,7 +1103,7 @@ void ComMode_5_Data()//发送倒地编码
 	myTxRxData[5]=0x00;
 	myTxRxData[6]=0x00;
 
-	initsignal();
+	initsignal2();
 
 	for(i=0;i<7;i++)
 	{

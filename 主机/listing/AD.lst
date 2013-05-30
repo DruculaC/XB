@@ -1,10 +1,10 @@
-C51 COMPILER V9.00   AD                                                                    05/13/2013 14:33:19 PAGE 1   
+C51 COMPILER V9.01   AD                                                                    05/30/2013 10:23:43 PAGE 1   
 
 
-C51 COMPILER V9.00, COMPILATION OF MODULE AD
+C51 COMPILER V9.01, COMPILATION OF MODULE AD
 OBJECT MODULE PLACED IN .\out\AD.obj
-COMPILER INVOKED BY: E:\Program Files (x86)\keil\C51\BIN\C51.EXE AD.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\AD
-                    -.lst) OBJECT(.\out\AD.obj)
+COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE AD.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\AD.lst) OBJECT(.\out\A
+                    -D.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   52          函数名：  GetADCResult
   53          功能：  读取指定通道的ADC转换值
   54          说明：
-C51 COMPILER V9.00   AD                                                                    05/13/2013 14:33:19 PAGE 2   
+C51 COMPILER V9.01   AD                                                                    05/30/2013 10:23:43 PAGE 2   
 
   55          入口参数： 指定的通道
   56          返回值：   读回的AD值
@@ -126,7 +126,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-C51 COMPILER V9.00   AD                                                                    05/13/2013 14:33:19 PAGE 3   
+C51 COMPILER V9.01   AD                                                                    05/30/2013 10:23:43 PAGE 3   
 
    CODE SIZE        =     79    ----
    CONSTANT SIZE    =   ----    ----

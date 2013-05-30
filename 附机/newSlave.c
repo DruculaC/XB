@@ -159,10 +159,10 @@ void initsignal()
 			Delay3(150);//延时要大于2ms
 		}
 		mystartbuffer=0xaa;
-		Delay3(150);
+		Delay3(80);
 	}
 	P10=1;
-	Delay3(80);
+//	Delay3(80);
 }
 
 void main(void)
@@ -238,7 +238,13 @@ void main(void)
 //						poweroverflag=0;
 					}
 
-					StartAll();//开机给主机发送开机指令	
+					StartAll();//开机给主机发送开机指令
+					Delay3(150);
+					StartAll();//开机给主机发送开机指令
+					Delay3(150);
+					StartAll();//开机给主机发送开机指令
+					Delay3(150);
+						
 					commuFlag=1;//开启通信
 					TurnFlag=1;
 				}
@@ -345,18 +351,18 @@ void main(void)
 //			alarmFlag2=0;//清报警标志
 //		}
 
-		if((alarmFlag3==1)&&(alarmCount3<1))//编码3开始相应的报警
+		if((alarmFlag3==1)&&(alarmCount3<2))//编码3开始相应的报警
 		{
 			alarmCount3++;
 			
 			PAshutdown=1;
-			SC_Speech(10);
+			SC_Speech(11);
 			Delay(150);
 			Moto=0;//开震动
 			Delay(20);
 			Moto=1;
 	
-			SC_Speech(10);
+			SC_Speech(11);
 			Delay(150);
 			Moto=0;//开震动
 			Delay(20);
@@ -549,7 +555,7 @@ void timeT1() interrupt 3 //定时器1中断接收数据
 			
 			case ComMode_3:
 			{
-//					TestFlag=0;//清超时标志				
+				TestFlag=0;//清超时标志				
 				alarmFlag3=1;
 				alarmCount2=3;			
 			}
@@ -769,12 +775,12 @@ void ComMode_1_Data()//发送边码1
 			if((myTxRxData[i]&0x80)==0x80)//为1
 			{
 				P10=0;
-				Delay3(110);//延时4.5ms以上，由于定时器占用问题，只能用这种延时来实现
+				Delay3(120);//延时4.5ms以上，由于定时器占用问题，只能用这种延时来实现
 			}
 			else//为0的情况
 			{
 				P10=0;
-				Delay3(70);//延时2ms，由于定时器占用问题，只能用这种延时来实现
+				Delay3(80);//延时2ms，由于定时器占用问题，只能用这种延时来实现
 			}
 			P10=1;//常态为高电平
 			myTxRxData[i]<<=1;

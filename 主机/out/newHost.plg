@@ -3,7 +3,7 @@
 <pre>
 <h1>礦ision Build Log</h1>
 <h2>Project:</h2>
-C:\Users\DXM\Desktop\GitHub\XB\主机\newHost.uvproj
+C:\Users\richard\Desktop\GitHub - 副本\XB\主机\newHost.uvproj
 Project File Date:  05/09/2013
 
 <h2>Output:</h2>
@@ -30,10 +30,6 @@ linking...
     SEGMENT: ?PR?_SENDNBYTE?UART
 *** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
     SEGMENT: ?PR?_SELECT?UART
-*** WARNING L15: MULTIPLE CALL TO SEGMENT
-    SEGMENT: ?PR?INITSIGNAL?NEWHOST
-    CALLER1: ?PR?TIMET1?NEWHOST
-    CALLER2: ?PR?TIME0?NEWHOST
-Program Size: data=10.5 xdata=79 code=3589
+Program Size: data=10.5 xdata=79 code=3697
 creating hex file from ".\out\newHost"...
-".\out\newHost" - 0 Error(s), 8 Warning(s).
+".\out\newHost" - 0 Error(s), 7 Warning(s).
