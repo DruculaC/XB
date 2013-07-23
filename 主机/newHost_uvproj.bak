@@ -381,6 +381,11 @@
               <FileType>1</FileType>
               <FilePath>.\VOICE.c</FilePath>
             </File>
+            <File>
+              <FileName>T1.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\T1.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

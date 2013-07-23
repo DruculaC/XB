@@ -1,1295 +1,674 @@
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 1   
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE NEWHOST
 OBJECT MODULE PLACED IN .\out\newHost.obj
-COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE newHost.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\newHost.lst) OBJE
-                    -CT(.\out\newHost.obj)
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE newHost.c LARGE BROWSE DEBUG OBJECTEXTEND PRINT(.\listi
+                    -ng\newHost.lst) OBJECT(.\out\newHost.obj)
 
 line level    source
 
-   1          
-   2          #include"N79E81x.h"
-   3          #include<intrins.h>
-   4          #include"AD.h"
-   5          #include"UART.h"
-   6          #include"T0.h"
-   7          #include"voice.h"
-   8          #include"pwm.h"
-   9          #include"T1.h"
-  10          
-  11          //¶¨ÒåÍ¨ÐÅÃüÁî
-  12          
-  13          #define CmdStart 0x00 //¿ª»úÃüÁî
-  14          #define CmdStop 0x01  //¹Ø»úÃüÁî
-  15          
-  16          #define ComMode_1 0xc1 //Í¨ÐÅÄ£Ê½1 
-  17          #define ComMode_2 0xc2 //Í¨ÐÅÄ£Ê½2
-  18          #define ComMode_3 0xc3 //Í¨ÐÅÄ£Ê½3
-  19          #define ComMode_4 0xc4 //Ì§ÆðÖ¸Áî
-  20          #define ComMode_5 0xc5//µ¹µØÖ¸Áî
-  21          
-  22          #define Succeed 0xce  //Í¨ÐÅ³É¹¦
-  23          #define Wrong 0xff    //Í¨ÐÅÊ§°Ü
-  24          
-  25          #define CmdHead 0xc8
-  26          #define CmdHead1 0x33 //Êý¾ÝÖ¡µÄÊ×²¿1, 00110011,11
-  27          #define CmdHead2 0xcc //Êý¾ÝÖ¡µÄÊ×²¿2,11001100,00
-  28          #define CmdHead3 0x3c //Êý¾ÝÖ¡µÄÊ×²¿3,11000011,01
-  29          #define CmdHead4 0xcc //Êý¾ÝÖ¡µÄÊ×²¿4,11001100,00
-  30          
-  31          #define MyAddress 0xe0
-  32          #define MyAddress1 0x33 //±¾»úµØÖ·1, 00110011,11
-  33          #define MyAddress2 0x3c //±¾»úµØÖ·2, 11000011,01
-  34          #define MyAddress3 0xcc //±¾»úµØÖ·3,11001100,00
-  35          #define MyAddress4 0xcc //±¾»úµØÖ·4,11001100,00
-  36          
-  37          //ÈýÂ·Ñ­»·
-  38          //sbit onePin=P1^6;
-  39          //sbit twoPin=P1^7;
-  40          
+   1          #include"N79E81x.h"
+   2          #include<intrins.h>
+   3          #include"AD.h"
+   4          #include"T0.h"
+   5          #include"voice.h"
+   6          #include"pwm.h"
+   7          #include"T1.h"
+   8          
+   9          #define CmdStart 0x00 //¿ª»úÃüÁî
+  10          #define CmdStop 0x01  //¹Ø»úÃüÁî
+  11          
+  12          #define ComMode_1 0xc1 //Í¨ÐÅÄ£Ê½1 
+  13          #define ComMode_2 0xc2 //Í¨ÐÅÄ£Ê½2
+  14          #define ComMode_3 0xc3 //Í¨ÐÅÄ£Ê½3
+  15          #define ComMode_4 0xc4 //Ì§ÆðÖ¸Áî
+  16          #define ComMode_5 0xc5//µ¹µØÖ¸Áî
+  17          
+  18          #define Succeed 0xce  //Í¨ÐÅ³É¹¦
+  19          #define Wrong 0xff    //Í¨ÐÅÊ§°Ü
+  20          
+  21          #define CmdHead 0xc8
+  22          #define CmdHead1 0x33 //Êý¾ÝÖ¡µÄÊ×²¿1, 00110011,11
+  23          #define CmdHead2 0xcc //Êý¾ÝÖ¡µÄÊ×²¿2,11001100,00
+  24          #define CmdHead3 0x3c //Êý¾ÝÖ¡µÄÊ×²¿3,11000011,01
+  25          #define CmdHead4 0xcc //Êý¾ÝÖ¡µÄÊ×²¿4,11001100,00
+  26          
+  27          #define MyAddress 0xe0
+  28          #define MyAddress1 0x33 //±¾»úµØÖ·1, 00110011,11
+  29          #define MyAddress2 0x3c //±¾»úµØÖ·2, 11000011,01
+  30          #define MyAddress3 0xcc //±¾»úµØÖ·3,11001100,00
+  31          #define MyAddress4 0xcc //±¾»úµØÖ·4,11001100,00
+  32          
+  33          sbit ModeControl_1=P2^6;        //ÎÞÏß·¢Éä»úÄ£Ê½¿ØÖÆ£¬1ÎªÐ¡¹¦ÂÊ£¬0Îª´ó¹¦ÂÊ
+  34          sbit ReceWave=P0^7;                     //ÈýÖá´«¸ÐÆ÷ÊäÈë¶Ë£¬1±íÊ¾ÎÞÕñ¶¯£¬0±íÊ¾ÓÐÕñ¶¯
+  35          sbit SensorControl=P2^5;        //ÈýÖá´«¸ÐÆ÷Ê¹ÄÜ¶Ë£¬1´ò¿ª´«¸ÐÆ÷£¬0¹Ø±Õ´«¸ÐÆ÷
+  36          sbit tran_en=P2^7;                      //ÎÞÏß·¢Éä»úÊ¹ÄÜ¿ØÖÆ£¬1Îª´ò¿ª·¢Éä»ú£¬0Îª¹Ø±Õ·¢Éä»ú
+  37          sbit MagentControl_1=P2^2;      //µç´ÅÌúÁ½¸ö¶Ë¿Ú£¬¿ØÖÆµç´ÅÌúÕý×ª»òÕß·´×ª
+  38          sbit MagentControl_2=P2^3;
+  39          sbit VoiceControl=P2^4;         //Ê°ÒôÆ÷Ê¹ÄÜ¶Ë£¬1´ò¿ªÊ°ÒôÆ÷£¬0¹Ø±ÕÊ°ÒôÆ÷
+  40          sbit PAshutdown=P1^4;           //¹¦·Å¿ª¹Ø¿ØÖÆ£¬1Îª´ò¿ª¹¦·Å£¬0Îª¹Ø±Õ¹¦·Å
   41          
-  42          //Ö÷»úµÄ·¢Éä²¿·ÖµÄ¿ØÖÆ¶Ë¿Ú
-  43          //sbit PWMout=P0^1;//·¢Éä»úµÄ·½²¨Êä³ö¿Ú£¬Ê¹ÓÃÍâÉèPWM
-  44          sbit ModeControl_1=P2^6;//·¢Éä»úÄ£Ê½¿ØÖÆ,0ÁÁÎª30MÄ£Ê½£¬1ÃðÎª300MÄ£Ê½
-  45          //sbit ModeTurn=P2^7;//·¢Éä»ú¿ª¹Ø£¬1ÁÁÎª¿ªÁË£¬0ÃðÎª¹ØÁË
-  46          
-  47          //½ÓÊÕ»ú¿ØÖÆ
-  48          sbit SwitchControl=P1^3;//1ÓÐÐ§£¬0¹Ø±Õ
+  42          unsigned char count=0;//Êý¾Ý½ÓÊÕ²¿·ÖµÄ¼ÆÊýÆ÷
+  43          
+  44          unsigned int time0Count_1=0;//×÷ÎªÈýÖá´«¸ÐÆ÷Á½¸öÂö³åÖ®¼äµÄÊ±¼ä¼ä¸ô¼ÆÊ±
+  45          unsigned int time0Count_2=0;//×÷ÎªÈýÖá´«¸ÐÆ÷µÄ¼ÆÊ±
+  46          unsigned int time0Count_3=0;//¶¨Ê±Æ÷T0µÄ¼ÆÊý
+  47          unsigned int time0Count_4=0;//×÷ÎªÌ§ÆðÂö³åµÄÊ±¼ä¼ä¸ô¼ÆÊ±
+  48          unsigned int time0Count_5=0;//×÷Îªµ¹µØÂö³åµÄÊ±¼ä¼ä¸ô¼ÆÊ±
   49          
-  50          //ÈýÖá´«¸ÐÆ÷
-  51          sbit ReceWave=P0^7;//ÈýÖá´«¸ÐÆ÷ÊäÈë¶Ë
-  52          sbit SensorControl=P2^5;//ÈýÖá´«¸ÐÆ÷¿ØÖÆ¶Ë
-  53          //²â¾à´«¸ÐÆ÷´ò¿ªÒ»´Î£¬Ïàµ±ÓÚÆðÊ¼ÐÅºÅ£¬Ò»´Î¸ßÂö³å¼´´ò¿ªÒ»´Î
-  54          sbit sensor_on=P0^0;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 2   
+  50          bit SensorFlag=0;                               //ÈýÖá´«¸ÐÆ÷µÄµÍµçÆ½±êÖ¾Î»
+  51          unsigned char SensorCount=0;    //×÷ÎªÈýÖá´«¸ÐÆ÷Âö³åµÄ¼ÆÊý
+  52          unsigned char TestFlag=0;               //Ã¿3s¼ÆÊý¼Ó1£¬Èç¹ûÍ¨ÐÅ³É¹¦£¬Ôò½«Æä¹éÁã¡£ÉèÖÃÈç¹ûÁ¬Ðøn´Î¶¼Ã»ÓÐ¹éÁã£¬ÔòËµÃ÷²»ÔÚ³
+             -¡ÁË
+  53          unsigned char ModeFlag=1;               //Ä£Ê½Ñ¡ÔñÎ»£¬1ÔòÓÃÄ£Ê½1,2ÔòÓÃÄ£Ê½2,3ÔòÎªÄ£Ê½3
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 2   
 
-  55          
-  56          //µç´ÅÌú
-  57          sbit MagentControl_1=P2^2;
-  58          sbit MagentControl_2=P2^3;
-  59          
-  60          //Ê°ÒôÆ÷¿ØÖÆ ADµÄ6ºÅÍ¨µÀÎªÊ°ÒôÆ÷µÄÒôÁ¿¼ì²é¶Ë
-  61          sbit VoiceControl=P2^4;//Ê°ÒôÆ÷¿ØÖÆ¶Ë
-  62          
-  63          sbit upSignal=P0^4;//Ì§ÆðÐÅºÅ
-  64          sbit downSignal=P0^3;//µ¹µØÐÅºÅ
-  65          
-  66          //µç³Ø¿ØÖÆ      ADµÄ1ºÅÍ¨µÀÎªµç³ØµÄµçÁ¿¼ì²â¶Ë£¬¿ØÖÆ³äµç¿ª¹Ø£¬0Îª³äµç£¬1Îª²»³äµç
-  67          sbit BatteryControl=P1^2;
-  68          
-  69          unsigned char count=0;//Êý¾Ý½ÓÊÕ²¿·ÖµÄ¼ÆÊýÆ÷
-  70          
-  71          unsigned int lastAddr=0;//ÉÏÒ»´Î½ÓÊÕµ½µÄ±àÂëµÄµØÖ·
-  72          
-  73          unsigned int time0Count_1=0;//×÷ÎªÈýÖá´«¸ÐÆ÷Á½¸öÂö³åÖ®¼äµÄÊ±¼ä¼ä¸ô¼ÆÊ±
-  74          unsigned int time0Count_2=0;//×÷ÎªÈýÖá´«¸ÐÆ÷µÄ¼ÆÊ±
-  75          unsigned int time0Count_3=0;//¶¨Ê±Æ÷T0µÄ¼ÆÊý
-  76          unsigned int time0Count_4=0;//×÷ÎªÌ§ÆðÂö³åµÄÊ±¼ä¼ä¸ô¼ÆÊ±
-  77          unsigned int time0Count_5=0;//×÷Îªµ¹µØÂö³åµÄÊ±¼ä¼ä¸ô¼ÆÊ±
-  78          
-  79          bit SensorFlag=0; //ÈýÖá´«¸ÐÆ÷µÄµÍµçÆ½±êÖ¾Î»
-  80          unsigned char  SensorCount=0; //×÷ÎªÈýÖá´«¸ÐÆ÷Âö³åµÄ¼ÆÊý
-  81          
-  82          unsigned char TestFlag=0;       //1¡¢2¡¢3·Ö±ðÎªÃ¿´Î½ÓÊÕµ½¸½»ú·¢ËÍÀ´Êý¾ÝºóµÄ¼ÆÊý£¬ÔÚ´®¿ÚµÄ³É¹¦Ö¸ÁîÀï»áÖ´ÐÐ½«È¥¹éÁ
-             -ãµÄ²Ù×÷
-  83                                                  //Èç¹ûÁ¬Ðø3´Î¶¼Ã»ÓÐ¹éÁã£¬ÔòËµÃ÷²»ÔÚ³¡ÁË
-  84          unsigned char ModeFlag=1;       //Ä£Ê½Ñ¡ÔñÎ»£¬1ÔòÓÃÄ£Ê½1,2ÔòÓÃÄ£Ê½2,3ÔòÎªÄ£Ê½3
-  85          
-  86          bit alarmFlag=0;//±¨¾¯ÓïÒôµÄ¿ªÆô±êÖ¾
-  87          bit alarmFlag2=0;//±¨¾¯ÓïÒô±êÖ¾2
-  88          unsigned char alarmCount=0;//±¨¾¯ÓïÒôµÄ´ÎÊý
-  89          
-  90          bit threeFlag=0;//ÈýÂ·Ñ­»·¿ª¹Ø±êÖ¾
-  91          
-  92          bit voiceFlag=0;
-  93          bit downUpFlag=0;  //µ¹µØºÍÌ§Æð¼ì²â±êÖ¾
-  94          
-  95          bit downFlag=0;//µ¹µØµÄ±êÖ¾
-  96          bit upFlag=0;//Ì§ÆðµÄ±êÖ¾
-  97          bit downFlagSend=0;//µ¹µØ·¢ËÍµÄ±êÖ¾
-  98          bit upFlagSend=0;//Ì§Æð·¢ËÍµÄ±êÖ¾
-  99          
- 100          //×÷Îª½ÓÊÕºÍ·¢ËÍµÄ»º´æÇø
- 101          unsigned char TxRxBuf[28]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
+  54          
+  55          bit alarmFlag=0;                                //±¨¾¯ÓïÒôµÄ¿ªÆô±êÖ¾
+  56          bit alarmFlag2=0;                               //±¨¾¯ÓïÒô±êÖ¾2
+  57          unsigned char alarmCount=0;             //±¨¾¯ÓïÒôµÄ´ÎÊý
+  58          
+  59          bit downUpFlag=0;                               //µ¹µØºÍÌ§Æð¼ì²â±êÖ¾
+  60          bit downFlag=0;                                 //µ¹µØµÄ±êÖ¾
+  61          bit upFlag=0;                                   //Ì§ÆðµÄ±êÖ¾
+  62          bit downFlagSend=0;                             //µ¹µØ·¢ËÍµÄ±êÖ¾
+  63          bit upFlagSend=0;                               //Ì§Æð·¢ËÍµÄ±êÖ¾
+  64          
+  65          //×÷Îª½ÓÊÕºÍ·¢ËÍµÄ»º´æÇø
+  66          unsigned char TxRxBuf[28]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
              -,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
- 102          
- 103          //Ò»¸öÍ·×Ö½Ú£¬Ò»¸öµØÖ·×Ö½Ú£¬Ò»¸öÃüÁî×Ö½Ú£¬Á½¸ö±àÂëµØÖ·×Ö½Ú£¬Á½¸ö±àÂë
- 104          unsigned char myTxRxData[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};//´¦ÀíÍêºóµÄÍ¨ÐÅÊý¾ÝµÄ»º³åÇø
- 105          
- 106          unsigned int Check2=0;//µçÁ¿¼ì²â
- 107          unsigned char Check1=0;//×÷ÎªAD¼ì²âÖµ£¬Ê°ÒôÆ÷¼ì²â£¬Æ½Ê±ÔëÉùÎª1VÒÔÄÚ£¬ÓÐÐÅºÅÊ±Îª1.5V
- 108          
- 109          bit receiveFlag=0;//½ÓÊÕµ½Êý¾Ý±êÖ¾
- 110          bit commuFlag=0;//¿ªÆôÍ¨ÐÅ±êÖ¾
- 111          
- 112          unsigned char DataBetween=0;//×÷Îª½ÓÊÕÊý¾ÝµÄÖÐ¼ä±äÁ¿
- 113          unsigned char RecData=0;//½ÓÊÕµ½µÄÊý¾Ý
- 114          unsigned char DataTime=0;//×÷Îª½ÓÊÕµÄÊý¾ÝµÄÒÆÎ»´ÎÊý¼ÆÊý
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 3   
+  67          
+  68          //Ò»¸öÍ·×Ö½Ú£¬Ò»¸öµØÖ·×Ö½Ú£¬Ò»¸öÃüÁî×Ö½Ú£¬Á½¸ö±àÂëµØÖ·×Ö½Ú£¬Á½¸ö±àÂë
+  69          unsigned char myTxRxData[7]={0x00,0x00,0x00,0x00,0x00,0x00,0x00};//´¦ÀíÍêºóµÄÍ¨ÐÅÊý¾ÝµÄ»º³åÇø
+  70          
+  71          unsigned int Check2=0;          //µçÁ¿¼ì²â
+  72          unsigned char Check1=0;         //×÷ÎªAD¼ì²âÖµ£¬Ê°ÒôÆ÷¼ì²â£¬Æ½Ê±ÔëÉùÎª1VÒÔÄÚ£¬ÓÐÐÅºÅÊ±Îª1.5V
+  73          
+  74          bit receiveFlag=0;                      //½ÓÊÕµ½Êý¾Ý±êÖ¾
+  75          bit commuFlag=0;                        //¿ªÆôÍ¨ÐÅ±êÖ¾
+  76          
+  77          unsigned char DataBetween=0;//×÷Îª½ÓÊÕÊý¾ÝµÄÖÐ¼ä±äÁ¿
+  78          unsigned char RecData=0;        //½ÓÊÕµ½µÄÊý¾Ý
+  79          unsigned char DataTime=0;       //×÷Îª½ÓÊÕµÄÊý¾ÝµÄÒÆÎ»´ÎÊý¼ÆÊý
+  80          bit ComFlag=1;                          //×öÉÏÉýÑØµÄÒ»¸ö±êÖ¾
+  81          unsigned char T1highcount=0;            //¶¨Ê±Æ÷T1ÔÚÃ»ÓÐÐÅºÅµ½À´µÄÊ±ºò£¬¶Ô¸ßµçÆ½¼ÆÊý£¬Ò»µ©³¬¹ýÄ³¸öÖµ£¬Ôò½«Datatim
+             -eÇå0
+  82          
+  83          unsigned char magnetflag=0;                     //¶¨Òåµç´ÅÌú×ª¶¯Óë·ñ
+  84          unsigned char powerflag=1;                      //¶¨ÒåµçÑ¹±¨¾¯±êÖ¾Î»
+  85          unsigned char commode2_flag=0;          //·¢ËÍ±àÂë2µÄ±êÖ¾Î»
+  86          
+  87          //º¯ÊýÉùÃ÷
+  88          void ComMode_1_Data(void);                      //·¢ËÍÄ£Ê½1±àÂë
+  89          void ComMode_2_Data(void);                      //·¢ËÍÄ£Ê½2±àÂë
+  90          void ComMode_22_Data(void);                     //·¢ËÍÄ£Ê½2±àÂë
+  91          void ComMode_3_Data(void);                      //·¢ËÍÄ£Ê½3±àÂë
+  92          void ComMode_4_Data(void);                      //·¢ËÍÌ§Æð±àÂë
+  93          void ComMode_5_Data(void);                      //·¢ËÍµ¹µØ±àÂë
+  94          
+  95          void Delay3(unsigned int t)                     //t=1Ê±£¬ÑÓ³Ù100us×óÓÒ
+  96          {
+  97   1              unsigned int i,j;
+  98   1              for(i=0;i<t;i++)                
+  99   1              for(j=0;j<19;j++);
+ 100   1      }
+ 101          void Delay33(unsigned int t)
+ 102          {
+ 103   1              unsigned int i,j;
+ 104   1              for(i=0;i<t;i++)                
+ 105   1              for(j=0;j<26;j++);
+ 106   1      }
+ 107          
+ 108          void initsignal()                                       //init signal£¬·¢ËÍ±àÂëÐÅºÅÇ°µÄÆðÊ¼ÐÅºÅ£¬ÓÃÓÚ½«½ÓÊÕ»úµÄ×Ô¶¯ÔöÒæ´ò¿ª
+ 109          {
+ 110   1              unsigned char k,k1;
+ 111   1              unsigned char mystartbuffer=0xb4;
+ 112   1              for(k1=0;k1<1;k1++)
+ 113   1              {
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 3   
 
- 115          bit ComFlag=1;//×öÉÏÉýÑØµÄÒ»¸ö±êÖ¾
- 116          //unsigned int newAddr=0;
- 117          unsigned char T1highcount=0;       //¶¨Ê±Æ÷T1ÔÚÃ»ÓÐÐÅºÅµ½À´µÄÊ±ºò£¬¶Ô¸ßµçÆ½¼ÆÊý£¬Ò»µ©³¬¹ýÄ³¸öÖµ£¬Ôò½«Datatime
-             -Çå0
- 118          //unsigned char T1highcount2=0;         //µ±P11ÎªµÍµçÆ½Ê±£¬ÀïÃæµÄ¸ßµçÆ½¼ÆÊý
- 119          
- 120          //¹¦·Å¿ª¹Ø¿ØÖÆ£¬1Îª´ò¿ª¹¦·Å£¬0Îª¹Ø±Õ¹¦·Å
- 121          sbit PAshutdown=P1^4;
- 122          
- 123          //¶¨Òåµç´ÅÌú×ª¶¯Óë·ñ
- 124          unsigned char magnetflag=0;
- 125          
- 126          //¶¨ÒåÒ»¸ö¼ÆÊý£¬À´±íÊ¾ÐÅºÅ½ÓÊÕºó£¬¶à³¤Ê±¼äÊ¹½ÓÊÕ»ú´ò¿ª£¬¼´¿ØÖÆSwitchControlµÄ¸ßµçÆ½Ê±¼ä¡£
- 127          unsigned int SwitchControlcount=0;
- 128          
- 129          //¶¨ÒåÒ»¸ö±êÊ¶Î»£¬±íÊ¾¿ª»úÒ»´Î£¬¹Ø»úÒ»´Î
- 130          unsigned char turnflag=0;
- 131          
- 132          //¶¨ÒåµçÑ¹±¨¾¯±êÖ¾Î»
- 133          unsigned char powerflag=1;
- 134          
- 135          //·¢ËÍ±àÂëÐÅºÅ±êÖ¾Î»
- 136          unsigned char commode2_flag=0; //·¢ËÍ±àÂë2µÄ±êÖ¾Î»
- 137          //unsigned char commode3_flag=0; //·¢ËÍ±àÂë3µÄ±êÖ¾Î»
- 138          
- 139          //º¯ÊýÉùÃ÷
- 140          void ComMode_1_Data(void);      //·¢ËÍÄ£Ê½1±àÂë
- 141          void ComMode_2_Data(void);//·¢ËÍÄ£Ê½2±àÂë
- 142          void ComMode_22_Data(void);//·¢ËÍÄ£Ê½2±àÂë
- 143          void ComMode_3_Data(void);//·¢ËÍÄ£Ê½3±àÂë
- 144          void ComMode_4_Data(void);//·¢ËÍÌ§Æð±àÂë
- 145          void ComMode_5_Data(void);//·¢ËÍµ¹µØ±àÂë
- 146          
- 147          //void codeData(unsigned char *doData,unsigned char len);               //±àÂë ,µçÆ½1±äÎª0011£¬µçÆ½0±äÎª1100
- 148          //void transCode(unsigned char *doData,unsigned char len);//½âÂë£¬½«½ÓÊÕµ½µÃÊý¾Ý»¹Ô­
- 149          
- 150          //t=1Ê±£¬ÑÓ³Ù100us×óÓÒ
- 151          void Delay3(unsigned int t)
- 152          {
- 153   1              unsigned int i,j;
- 154   1              for(i=0;i<t;i++)                
- 155   1              for(j=0;j<19;j++);
- 156   1      }
- 157          
- 158          void Delay33(unsigned int t)
- 159          {
- 160   1              unsigned int i,j;
- 161   1              for(i=0;i<t;i++)                
- 162   1              for(j=0;j<26;j++);
- 163   1      }
- 164          
- 165          //init signal£¬·¢ËÍ±àÂëÐÅºÅÇ°µÄÆðÊ¼ÐÅºÅ£¬ÓÃÓÚ½«½ÓÊÕ»úµÄ×Ô¶¯ÔöÒæ´ò¿ª
- 166          void initsignal()
- 167          {
- 168   1              unsigned char k,k1;
- 169   1              unsigned char mystartbuffer=0xb4;
- 170   1              for(k1=0;k1<8;k1++)
- 171   1              {
- 172   2                      for(k=0;k<8;k++)
- 173   2                      {
- 174   3                              if((mystartbuffer&0x80)==0x80)//Îª1
- 175   3                              {
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 4   
+ 114   2                      for(k=0;k<8;k++)
+ 115   2                      {
+ 116   3                              if((mystartbuffer&0x80)==0x80)//Îª1
+ 117   3                              {
+ 118   4                                      P10=0;
+ 119   4                                      Delay3(300);            //ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 120   4                              }
+ 121   3                              else                                    //Îª0µÄÇé¿ö
+ 122   3                              {
+ 123   4                                      P10=0;
+ 124   4                                      Delay3(300);            //ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 125   4                              }
+ 126   3                              P10=1;                                  //³£Ì¬Îª¸ßµçÆ½
+ 127   3                              mystartbuffer<<=1;
+ 128   3                              Delay3(100);                    //ÑÓÊ±Òª´óÓÚ2ms
+ 129   3                      }
+ 130   2                      mystartbuffer=0xaa;
+ 131   2                      Delay3(50);
+ 132   2              }
+ 133   1              P10=1;
+ 134   1      }
+ 135          
+ 136          void initsignal2()
+ 137          {
+ 138   1              unsigned char k,k1;
+ 139   1              unsigned char mystartbuffer=0xb4;
+ 140   1              for(k1=0;k1<8;k1++)
+ 141   1              {
+ 142   2                      for(k=0;k<8;k++)
+ 143   2                      {
+ 144   3                              if((mystartbuffer&0x80)==0x80)          //Îª1
+ 145   3                              {
+ 146   4                                      P10=0;
+ 147   4                                      Delay3(205);                                    //ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 148   4                              }
+ 149   3                              else                                                            //Îª0µÄÇé¿ö
+ 150   3                              {
+ 151   4                                      P10=0;
+ 152   4                                      Delay3(205);                                    //ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 153   4                              }
+ 154   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
+ 155   3                              mystartbuffer<<=1;
+ 156   3                              Delay3(70);                                                     //ÑÓÊ±Òª´óÓÚ2ms
+ 157   3                      }
+ 158   2                      mystartbuffer=0xaa;
+ 159   2                      Delay3(35);
+ 160   2              }
+ 161   1              P10=1;
+ 162   1      }
+ 163          void main()
+ 164          {
+ 165   1              noVoice();
+ 166   1              InitT0();
+ 167   1              InitT1();
+ 168   1              ET0=1;
+ 169   1              ET1=1;
+ 170   1              PT1=1;
+ 171   1              EA=1;
+ 172   1              P10=1;
+ 173   1      
+ 174   1              myPwm();                                //·½²¨Êä³ö
+ 175   1              VoiceControl=0;                 //ÉÏµçµÄÊ±ºò£¬Ê°ÒôÆ÷´ò¿ª
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 4   
 
- 176   4                                      P10=0;
- 177   4                                      Delay3(300);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 178   4                              }
- 179   3                              else//Îª0µÄÇé¿ö
- 180   3                              {
- 181   4                                      P10=0;
- 182   4                                      Delay3(300);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 183   4                              }
- 184   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
- 185   3                              mystartbuffer<<=1;
- 186   3                              Delay3(100);//ÑÓÊ±Òª´óÓÚ2ms
- 187   3                      }
- 188   2                      mystartbuffer=0xaa;
- 189   2                      Delay3(50);
- 190   2              }
- 191   1              P10=1;
- 192   1      //      Delay3(80);
- 193   1      }
- 194          
- 195          void initsignal2()
- 196          {
- 197   1              unsigned char k,k1;
- 198   1              unsigned char mystartbuffer=0xb4;
- 199   1              for(k1=0;k1<8;k1++)
- 200   1              {
- 201   2                      for(k=0;k<8;k++)
- 202   2                      {
- 203   3                              if((mystartbuffer&0x80)==0x80)//Îª1
- 204   3                              {
- 205   4                                      P10=0;
- 206   4                                      Delay3(205);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 207   4                              }
- 208   3                              else//Îª0µÄÇé¿ö
- 209   3                              {
- 210   4                                      P10=0;
- 211   4                                      Delay3(205);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 212   4                              }
- 213   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
- 214   3                              mystartbuffer<<=1;
- 215   3                              Delay3(70);//ÑÓÊ±Òª´óÓÚ2ms
- 216   3                      }
- 217   2                      mystartbuffer=0xaa;
- 218   2                      Delay3(35);
- 219   2              }
- 220   1              P10=1;
- 221   1      //      Delay3(80);
+ 176   1              PAshutdown=0;                   //½«¹¦·Å¹Ø±Õ
+ 177   1              tran_en=0;                              //·¢Éä»ú¹Ø±Õ
+ 178   1              ModeControl_1=1;        //·¢Éä»úÄ£Ê½ÎªµÍ¹¦ÂÊ
+ 179   1              MagentControl_1=0;              //¹Ø±Õ´ÅÌú
+ 180   1              MagentControl_2=1;
+ 181   1              Delay(27);
+ 182   1              MagentControl_1=0;              //´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
+ 183   1              MagentControl_2=0;
+ 184   1              magnetflag=0;
+ 185   1              
+ 186   1              Check2=0x3ff;
+ 187   1              commode2_flag=0;
+ 188   1              Check1=GetADCResult(5);         //Ê°ÒôÆ÷µÄ¼ì²â
+ 189   1              Check2=GetADCResult(6);         //µçÁ¿¼ì²â
+ 190   1              powerflag=0;
+ 191   1              SensorControl=0;                        //¹Ø±Õ´«¸ÐÆ÷
+ 192   1      
+ 193   1              while(1)
+ 194   1              {
+ 195   2                      if(Check1>=0x100)       //ÉèÖÃ±È½ÏµçÑ¹£¬´Ë´¦Îª3VÉèÖÃ
+ 196   2                      {
+ 197   3                              PAshutdown=0;   //Ê°ÒôÆ÷³¬¹ýÄ³¸öµçÑ¹Ê±£¬´ò¿ª¹¦·Å
+ 198   3                      }
+ 199   2                      else
+ 200   2                      {
+ 201   3                              PAshutdown=0;   //Ê°ÒôÆ÷Ò»µ©µÍÓÚÄ³¸öµçÑ¹£¬Ôò¹Ø±Õ¹¦·Å
+ 202   3                      }
+ 203   2      
+ 204   2                      if((powerflag==1)&&(Check2<=0x35a))
+ 205   2                      {
+ 206   3                              powerflag=0;
+ 207   3                              PAshutdown=1;
+ 208   3                              SC_Speech(7);   //µçÑ¹²»³ä×ãÌáÊ¾
+ 209   3                              Delay(120);
+ 210   3                              PAshutdown=0;
+ 211   3                      }
+ 212   2                      else if((powerflag==0)&&(Check2>=0x377))
+ 213   2                      {
+ 214   3                              powerflag=1;
+ 215   3                              PAshutdown=1;
+ 216   3                              SC_Speech(6);   //µçÑ¹³ä×ãÌáÊ¾
+ 217   3                              Delay(120);
+ 218   3                              PAshutdown=0;
+ 219   3                      }
+ 220   2      
+ 221   2              }
  222   1      }
- 223          void main()
- 224          {
- 225   1      //      unsigned int newAddr=0;
- 226   1      
- 227   1              noVoice();
+ 223          
+ 224          void timeT1() interrupt 3       //¶¨Ê±Æ÷1ÖÐ¶Ï½ÓÊÕÊý¾Ý
+ 225          {
+ 226   1              TH1=timer1H;                    //ÖØ×°ÔØ
+ 227   1              TL1=timer1L;
  228   1      
- 229   1      //      InitUART();
- 230   1              InitT0();
- 231   1              InitT1();
- 232   1      //      TI=0;
- 233   1      //      RI=0;
- 234   1      
- 235   1      //      SwitchControl=1;         //¿ªÆð½ÓÊÕ»ú£¬¿ØÖÆ¶ËÎªµÍµçÆ½
- 236   1      
- 237   1      //      onePin=0;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 5   
+ 229   1              if(P11==0)                              //Õý³£Çé¿öÎª¸ßµçÆ½,ÓÐµÍµçÆ½ËµÃ÷ÓÐÐÅºÅ
+ 230   1              {
+ 231   2                      DataBetween++;
+ 232   2                      ComFlag=0;
+ 233   2                      if(DataBetween==150)//µÍµçÆ½³ÖÐøµÄ×î´óÊ±¼ä      
+ 234   2                      {
+ 235   3                              DataBetween=0;
+ 236   3                      }
+ 237   2              }
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 5   
 
- 238   1      //      twoPin=0;
- 239   1              sensor_on=0;
- 240   1      
- 241   1      //      upSignal=1;
- 242   1      //      downSignal=1;
- 243   1      
- 244   1      //      ES=1;
- 245   1              ET0=1;
- 246   1              ET1=1;
- 247   1      //      PS=1;
- 248   1              PT1=1;
- 249   1              EA=1;
- 250   1              P10=1;
- 251   1      //      P11=1;
- 252   1      
- 253   1              BatteryControl=0;       //¸½»úÉÏµçµÄÊ±ºòÖÃ0£¬¼´¿ÉÒÔ³äµç£¬µç³ØÔÚÃ»ÓÐ³äÂúµÄÇé¿öÏÂÎªµÍµçÆ½
- 254   1              myPwm();        //¿ª·¢Éä»ú
- 255   1              VoiceControl=1;   //ÉÏµçµÄÊ±ºò£¬Ê°ÒôÆ÷´ò¿ª
- 256   1              PAshutdown=0;           //½«¹¦·Å¹Ø±Õ
- 257   1      
- 258   1              MagentControl_1=0;//¹Ø±Õ´ÅÌú
- 259   1              MagentControl_2=1;
- 260   1              Delay(27);
- 261   1              MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 262   1              MagentControl_2=0;
- 263   1              magnetflag=0;
- 264   1              
- 265   1              Check2=0x3ff;
- 266   1              commode2_flag=0;
- 267   1              Check1=GetADCResult(5);         //Ê°ÒôÆ÷µÄ¼ì²â
- 268   1              Check2=GetADCResult(6);         //µçÁ¿¼ì²â
- 269   1              powerflag=0;
- 270   1              turnflag=0;
- 271   1      
- 272   1              SensorControl=0;
- 273   1      
- 274   1              while(1)
- 275   1              {
- 276   2      //              Delay(500);
- 277   2                      if(Check1>=0x100)//ÉèÖÃ±È½ÏµçÑ¹£¬´Ë´¦Îª3VÉèÖÃ
- 278   2                      {
- 279   3                              PAshutdown=1;   //Ê°ÒôÆ÷³¬¹ýÄ³¸öµçÑ¹Ê±£¬´ò¿ª¹¦·Å
- 280   3                      }
- 281   2                      else
- 282   2                      {
- 283   3                              PAshutdown=0;   //Ê°ÒôÆ÷Ò»µ©µÍÓÚÄ³¸öµçÑ¹£¬Ôò¹Ø±Õ¹¦·Å
- 284   3                      }
- 285   2      
- 286   2                      if(Check2>=0x377) //±íÊ¾µç³Ø³ä°üÁË
- 287   2                      {
- 288   3                              BatteryControl=1;//¿ªÂ©Ä£Ê½£¬ÕâÑùÎª¸ß×èÌ¬       
- 289   3                      }
- 290   2                      else
- 291   2                      {
- 292   3                              BatteryControl=0;//µç³ØÔÚÃ»ÓÐ³äÂúµÄÇé¿öÏÂÎªµÍµçÆ½
- 293   3                      }
- 294   2      /*
- 295   2                      if(turnflag==1)
- 296   2                      {
- 297   2                              if(Check2<=0x300)
- 298   2                              {
- 299   2                                      PAshutdown=1;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 6   
+ 238   1              else                                    //Îª¸ßµçÆ½ÁË
+ 239   1              {
+ 240   2                      if(ComFlag==0)          //ËµÃ÷ÓÐÒ»¸öµÍµçÆ½
+ 241   2                      {
+ 242   3                              ComFlag=1;
+ 243   3                              if((DataBetween>60)&&(DataBetween<=100))        //µÍµçÆ½³ÖÐøµÄÊ±¼äÐ¡ÓÚ10ms£¬ÔòÎª0
+ 244   3                              {
+ 245   4                                      RecData<<=1;
+ 246   4                                      RecData &= 0xfe;
+ 247   4                                      DataTime++;
+ 248   4                                      T1highcount=0;
+ 249   4                              }
+ 250   3                              else if((DataBetween>100))                                      //µÍµçÆ½³ÖÐøµÄÊ±¼ä´óÓÚ10ms£¬ÔòÎª1
+ 251   3                              {
+ 252   4                                      RecData<<=1;
+ 253   4                                      RecData |= 0x01;
+ 254   4                                      DataTime++;
+ 255   4                                      T1highcount=0;
+ 256   4                              }
+ 257   3                              else
+ 258   3                              {
+ 259   4                                      T1highcount++;  
+ 260   4                              }
+ 261   3      
+ 262   3                              DataBetween=0;
+ 263   3                      }
+ 264   2                      else
+ 265   2                      {
+ 266   3                              T1highcount++;
+ 267   3                              if(T1highcount>=150)
+ 268   3                              {
+ 269   4                                      DataTime=0;
+ 270   4                                      ComFlag=1;
+ 271   4                                      count=0;
+ 272   4                              }               
+ 273   3                      }
+ 274   2              }
+ 275   1      
+ 276   1              if(DataTime==8)                                 //ËµÃ÷Ò»¸ö×Ö½ÚµÄÊý¾ÝÒÑ¾­½ÓÊÜÍêÈ«
+ 277   1              {
+ 278   2                      DataTime=0;
+ 279   2                      myTxRxData[count]=RecData;
+ 280   2                      if(count==0&&myTxRxData[0]==CmdHead)
+ 281   2                      {
+ 282   3                              count=1;
+ 283   3                      }
+ 284   2                      else if(count==1&&myTxRxData[1]==MyAddress)
+ 285   2                      {
+ 286   3                              count=2;
+ 287   3                      }
+ 288   2                      else if(count>=2&&count<=5)
+ 289   2                      {
+ 290   3                              count++;
+ 291   3                      }
+ 292   2                      else if(count==6)
+ 293   2                      {
+ 294   3                          receiveFlag=1;
+ 295   3                              count=0;
+ 296   3                      }
+ 297   2                      else 
+ 298   2                      {
+ 299   3                              count=0;
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 6   
 
- 300   2                                      SC_Speech(8);   //µçÑ¹²»³ä×ãÌáÊ¾
- 301   2                                      Delay(120);
- 302   2                                      PAshutdown=0;
- 303   2                                      powerflag=0;
- 304   2                              }
- 305   2                              else if(Check2>=0x390)
- 306   2                              {
- 307   2                                      PAshutdown=1;
- 308   2                                      SC_Speech(7);   //µçÑ¹³ä×ãÌáÊ¾
- 309   2                                      Delay(120);
- 310   2                                      PAshutdown=0;
- 311   2                                      powerflag=1;
- 312   2                              }
- 313   2                              turnflag=0;     
- 314   2                      }
- 315   2                      
- 316   2                      if(Check2<=0x300)
- 317   2                      {
- 318   2      //                      powerflag=0;
- 319   2                              PAshutdown=1;
- 320   2                              SC_Speech(8);   //µçÑ¹²»³ä×ãÌáÊ¾
- 321   2                              Delay(120);
- 322   2                              PAshutdown=0;
- 323   2                      }
- 324   2                      else if(Check2>=0x390)
- 325   2                      {
- 326   2      //                      powerflag=1;
- 327   2                              PAshutdown=1;
- 328   2                              SC_Speech(7);   //µçÑ¹³ä×ãÌáÊ¾
- 329   2                              Delay(120);
- 330   2                              PAshutdown=0;
- 331   2                      }
- 332   2      */
- 333   2      //              if(SwitchControlcount==18000)
- 334   2      //              {
- 335   2      //                      SwitchControl=0;
- 336   2      //                      SwitchControlcount=0;   
- 337   2      //              }
- 338   2              }
- 339   1      }
- 340          
- 341          void timeT1() interrupt 3 //¶¨Ê±Æ÷1ÖÐ¶Ï½ÓÊÕÊý¾Ý
- 342          {
- 343   1      //      unsigned int newAddr=0;
- 344   1              TH1=timer1H;//ÖØ×°ÔØ
- 345   1              TL1=timer1L;
- 346   1      
- 347   1      //      if(SwitchControl==1)
- 348   1      //      {
- 349   1      //              SwitchControlcount++;
- 350   1      //      }
- 351   1      //      else
- 352   1      //      {
- 353   1              if(P11==0)//Õý³£Çé¿öÎª¸ßµçÆ½,ÓÐµÍµçÆ½ËµÃ÷ÓÐÐÅºÅ
- 354   1              {
- 355   2                      DataBetween++;
- 356   2                      ComFlag=0;
- 357   2                      if(DataBetween==150)//µÍµçÆ½³ÖÐøµÄ×î´óÊ±¼ä      
- 358   2                      {
- 359   3                              DataBetween=0;
- 360   3                      }
- 361   2              }
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 7   
+ 300   3                      }
+ 301   2              }
+ 302   1      
+ 303   1              if(receiveFlag==1)
+ 304   1              {
+ 305   2                      receiveFlag=0;
+ 306   2                      switch(myTxRxData[2])                           //¶ÔÊý¾ÝÖ¡ÀïµÄÃüÁî½øÐÐ´¦Àí
+ 307   2                      {
+ 308   3                              case ComMode_1:                                 //¸½»ú·¢ËÍ¹ýÀ´µÄÖ»ÓÃÄ£Ê½1£¬ËµÃ÷ÏÖÔÚÊÇÕý³£µÄ£¬Êý¾Ý²¿·ÖÎªÊý×éµÄµÚÒ»ºÍµÚ¶þ¸ö×Ö½Ú£¬ÎªÃ
+             -ÜÂë±íÄÚµÄÕâ¸ö±àÂëµÄ¿ªÊ¼×Ö½ÚµÄÄÇ¸öµØÖ·£¬È»ºóÌî³äÊý¾ÝÖ¡£¬°ÑÃÜÂë±íµÄÊý¾Ý·¢ËÍ³öÈ¥
+ 309   3                              {
+ 310   4                                      ComMode_22_Data();                      //»Ø¸´È·ÈÏÐÅºÅ
+ 311   4                                      alarmFlag=0;                            //¹Ø±¨¾¯±êÖ¾Î»
+ 312   4                                      alarmCount=0;                           //±¨¾¯¼ÆÊý´ÎÊýÇåÁã
+ 313   4                                      commode2_flag=0;                        //¹Ø±Õ±àÂë2ÐÅºÅµÄ·¢ËÍ
+ 314   4                                      SensorControl=0;                        //¹Ø±ÕÈýÖá´«¸ÐÆ÷
+ 315   4                                      downUpFlag=0;                           //¹Øµ¹µØ¡¢Ì§Æð¼ì²â
+ 316   4                                                              
+ 317   4                                      if(magnetflag==0)
+ 318   4                                      {
+ 319   5                                              MagentControl_1=1;              //¿ªÆô´ÅÌú
+ 320   5                                              MagentControl_2=0;
+ 321   5                                              Delay(27);
+ 322   5                                              MagentControl_1=0;              //´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
+ 323   5                                              MagentControl_2=0;
+ 324   5                                              magnetflag=1;
+ 325   5                                      }
+ 326   4                                      TestFlag=0;     
+ 327   4                                      
+ 328   4                                      if(ModeFlag==3||ModeFlag==2)
+ 329   4                                      {
+ 330   5                                              ModeFlag=1;
+ 331   5                                      }
+ 332   4                              }
+ 333   3                              break;
+ 334   3                      }
+ 335   2              }
+ 336   1      }
+ 337          
+ 338          void time0() interrupt 1                        //×÷ÎªÕû¸öÏµÍ³×Ô¼ºµÄÊ±ÖÓ
+ 339          {
+ 340   1              TH0=timer0H;                                    //ÖØ×°ÔØ
+ 341   1              TL0=timer0L;
+ 342   1              time0Count_3++;
+ 343   1      
+ 344   1              if(time0Count_3>=60)                    //´®¿ÚÃ¿3S½ÓÊÜÒ»´ÎµÄÊý¾ÝµÄÊ±¼ä±êÖ¾
+ 345   1              {
+ 346   2                      if(commuFlag==1)                        //ËµÃ÷¿ªÆôÁËÍ¨ÐÅ
+ 347   2                      {
+ 348   3                              TestFlag++;
+ 349   3                              if(TestFlag==3&&ModeFlag==1)            //ËµÃ÷Ã»ÓÐ½ÓÊÕµ½Êý¾ÝÒÑ¾­ÓÐ3´ÎÁË£¬¸½»úÒÑ¾­³öÁË3M£¬ÏÖÔÚ¾ÍÒª¼Ó´ó¹¦ÂÊ£¬ÇÐ»»µ½
+             -Ä£Ê½2,30MÔÙ¿´ÄÜ²»ÄÜ½ÓÊÕµ½Êý¾Ý
+ 350   3                              {
+ 351   4                                      TestFlag=5;
+ 352   4                                      if(ModeFlag==1)
+ 353   4                                      {
+ 354   5                                              if(magnetflag==1)
+ 355   5                                              {
+ 356   6                                                      MagentControl_1=0;              //¿ªÆô´ÅÌú
+ 357   6                                                      MagentControl_2=1;
+ 358   6                                                      Delay(27);
+ 359   6                                                      MagentControl_1=0;              //´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 7   
 
- 362   1              else//Îª¸ßµçÆ½ÁË
- 363   1              {
- 364   2                      if(ComFlag==0)//ËµÃ÷ÓÐÒ»¸öµÍµçÆ½
- 365   2                      {
- 366   3                              ComFlag=1;
- 367   3      //                              RecData<<=1;
- 368   3      
- 369   3                              if((DataBetween>60)&&(DataBetween<=100))        //µÍµçÆ½³ÖÐøµÄÊ±¼äÐ¡ÓÚ10ms£¬ÔòÎª0
- 370   3                              {
- 371   4                                      RecData<<=1;
- 372   4                                      RecData &= 0xfe;
- 373   4                                      DataTime++;
- 374   4                                      T1highcount=0;
- 375   4                              }
- 376   3                              else if((DataBetween>100))//µÍµçÆ½³ÖÐøµÄÊ±¼ä´óÓÚ10ms£¬ÔòÎª1
- 377   3                              {
- 378   4                                      RecData<<=1;
- 379   4                                      RecData |= 0x01;
- 380   4                                      DataTime++;
- 381   4                                      T1highcount=0;
- 382   4                              }
- 383   3                              else
- 384   3                              {
- 385   4                                      T1highcount++;  
- 386   4                              }
- 387   3      
- 388   3                              DataBetween=0;
- 389   3      //                              DataTime++;
- 390   3                      }
- 391   2                      else
- 392   2                      {
- 393   3                              T1highcount++;
- 394   3                              if(T1highcount>=150)
- 395   3                              {
- 396   4                                      DataTime=0;
- 397   4                                      ComFlag=1;
- 398   4                                      count=0;
- 399   4                              }               
- 400   3                      }
- 401   2              }
- 402   1      //      P01=~P01;
- 403   1      
- 404   1              if(DataTime==8)//ËµÃ÷Ò»¸ö×Ö½ÚµÄÊý¾ÝÒÑ¾­½ÓÊÜÍêÈ«
- 405   1              {
- 406   2                      DataTime=0;
- 407   2                      myTxRxData[count]=RecData;
- 408   2                      if(count==0&&myTxRxData[0]==CmdHead)
- 409   2                      {
- 410   3                              count=1;
- 411   3                      }
- 412   2                      else if(count==1&&myTxRxData[1]==MyAddress)
- 413   2                      {
- 414   3                              count=2;
- 415   3                      }
- 416   2                      else if(count>=2&&count<=5)
- 417   2                      {
- 418   3                              count++;
- 419   3                      }
- 420   2                      else if(count==6)
- 421   2                      {
- 422   3                          receiveFlag=1;
- 423   3                              count=0;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 8   
+ 360   6                                                      MagentControl_2=0;
+ 361   6                                                      magnetflag=0;
+ 362   6                                              }
+ 363   5                                              SensorControl=1;                        //¿ªÆôÈýÖá´«¸ÐÆ÷
+ 364   5                                              downUpFlag=1;                           //¿ªÆôµ¹µØ¡¢Ì§Æð±êÖ¾
+ 365   5                                              ModeFlag=2;
+ 366   5                                              commode2_flag=1;
+ 367   5                                      }       
+ 368   4                              }
+ 369   3      
+ 370   3                              if(commode2_flag==1)
+ 371   3                              {
+ 372   4                                      ComMode_2_Data();                               //Ïò¸½»ú·¢ËÍ±àÂë2       
+ 373   4                              }
+ 374   3                      }
+ 375   2                      time0Count_3=0;
+ 376   2                      Check1=GetADCResult(5);                                 //Ê°ÒôÆ÷µÄ¼ì²â
+ 377   2                      Check2=GetADCResult(6);                                 //µçÁ¿¼ì²â
+ 378   2              }
+ 379   1      
+ 380   1              if(SensorControl==1)                                            //¼ì²âÈýÖá´«¸ÐÆ÷ÊÇ·ñ´ò¿ª
+ 381   1              {
+ 382   2                      if(ReceWave==0)                                                 //ËµÃ÷ÓÐ´¥·¢Çé¿ö£¬¿ªÊ¼¼ÆÊ±
+ 383   2                      {
+ 384   3                              time0Count_2++;
+ 385   3                              if(time0Count_2>=10)                            //ËµÃ÷ÒÑ¾­´óÓÚ0.5S
+ 386   3                              {
+ 387   4                                      time0Count_2 =0;                                //¼ÆÊ±ÆÚÇåÁã
+ 388   4                                      SensorCount++;                                  //ÈýÖá´«¸ÐÆ÷Âö³å¼ÆÊý¼Ó1
+ 389   4                                      alarmFlag2=1;
+ 390   4                              }               
+ 391   3                      }
+ 392   2                      else if(ReceWave==1&&SensorCount!=0)    //ËµÃ÷ÒÑ¾­ÓÐÒ»¸öÓÐÓÃµÄÂö³å
+ 393   2                      {
+ 394   3                              time0Count_1++;
+ 395   3                              if(time0Count_1>=200)                           //´óÓÚ10S
+ 396   3                              {
+ 397   4                                      SensorCount=0;
+ 398   4                              }
+ 399   3                      }
+ 400   2              }
+ 401   1       
+ 402   1              if(ModeFlag==2&&SensorCount>=1)                         //ÈýÖá´«¸ÐÆ÷Âö³åµÄÏàÓ¦±¨¾¯
+ 403   1              {
+ 404   2                      if(SensorCount==1&&alarmFlag2==1)               //ÈýÖá´«¸ÐÆ÷Ò»´Î´¥·¢,alarmFlag2¿ØÖÆ·¢Éù1´Î
+ 405   2                      {                                       
+ 406   3                              VoiceControl=0;                                         //Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
+ 407   3                              PAshutdown=1;                                           //ÏÈ¹Ø±ÕÊ°ÒôÆ÷£¬È»ºó´ò¿ª¹¦·Å
+ 408   3                              SC_Speech(1);                                           //ÓïÒôÌáÊ¾
+ 409   3                              Delay(140);
+ 410   3                              PAshutdown=0;                                           //ÓïÒôÍê³Éºó£¬¹Ø±Õ¹¦·Å£¬È»ºó´ò¿ªÊ°ÒôÆ÷
+ 411   3                              VoiceControl=1;                                         //¿ªÆôÊ°ÉùÆ÷
+ 412   3                              alarmFlag2=0;
+ 413   3                      }
+ 414   2                      if(SensorCount>=2)                                              //ÈýÖá´«¸ÐÆ÷Ò»´Î´¥·¢
+ 415   2                      {
+ 416   3                              ModeFlag=3;                                                     //ÈýÖá´«¸ÐÆ÷ÒÑ¾­ÓÐ3´Î´¥·¢ÁË£¬Òª¸Ä±ä·¢ÉäÄ£Ê½ÁË
+ 417   3                              alarmFlag=1;                                            //ÖÃÓïÒô±¨¾¯Î»
+ 418   3                              alarmFlag2=0;
+ 419   3                              SensorCount=0;                                          //Âö³å¼ÆÊýÇåÁã
+ 420   3                              Delay(1);
+ 421   3                              commode2_flag=0;                                        //²»·¢ËÍ±àÂë2ÁË
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 8   
 
- 424   3                      }
- 425   2                      else 
- 426   2                      {
- 427   3                              count=0;
- 428   3                      }
- 429   2              }
- 430   1      
- 431   1              if(receiveFlag==1)
- 432   1              {
- 433   2                      receiveFlag=0;
- 434   2                      SwitchControl=1;
- 435   2      //              SwitchControl=1;
- 436   2      //              transCode(TxRxBuf,0x1c);//½«½ÓÊÕµ½µÃÊý¾Ý½âÂë    
- 437   2      //              ½âÎöÃüÁî
- 438   2                      switch(myTxRxData[2]) //¶ÔÊý¾ÝÖ¡ÀïµÄÃüÁî½øÐÐ´¦Àí
- 439   2                      {
- 440   3                              case CmdStart://ÈôÊÇ¿ª»úÖ¸Áî£¬Ö´ÐÐ¿ª»ú²Ù×÷
- 441   3                              {
- 442   4      //ÔÚÕâÀï¼ÓÈë¿ª»úµÄÊ±ºòÒª×öµÄÊÂÇé
- 443   4                                      ModeControl_1=1;        //·¢Éä»úÄ£Ê½¿ØÖÆ¶Ë,¿ª»úÊ±Îª30MÄ£Ê½
- 444   4                                  VoiceControl=1;             //¿ª»úÊ±Ö÷»ú¿ªÊ°ÒôÆ÷
- 445   4                                      
- 446   4                                      if(magnetflag==0)
- 447   4                                      {
- 448   5                                              MagentControl_1=1;//¿ªÆô´ÅÌú
- 449   5                                              MagentControl_2=0;
- 450   5                                              Delay(27);
- 451   5                                              MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 452   5                                              MagentControl_2=0;
- 453   5                                              magnetflag=1;
- 454   5                                      }
- 455   4      
- 456   4                                      SensorControl=0;
- 457   4                                      commuFlag=1; //¿ªÆôÍ¨ÐÅ
- 458   4                                      turnflag=1;
- 459   4                              }
- 460   3                              break;
- 461   3      
- 462   3                              case CmdStop:     //ÈôÊÇ¹Ø»úÖ¸Áî£¬Ö´ÐÐ¹Ø»ú²Ù×÷
- 463   3                              {
- 464   4      //ÔÚÕâÀï¼ÓÈë¹Ø»úµÄÊ±ºòÒª×öµÄÊÂÇé
- 465   4                                      
- 466   4                                      VoiceControl=0;//¹Ø±ÕÊ°ÉùÆ÷
- 467   4      
- 468   4                                      if(magnetflag==1)
- 469   4                                      {
- 470   5                                              MagentControl_1=0;//¿ªÆô´ÅÌú
- 471   5                                              MagentControl_2=1;
- 472   5                                              Delay(27);
- 473   5                                              MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 474   5                                              MagentControl_2=0;
- 475   5                                              magnetflag=0;
- 476   5                                      }
- 477   4                                      SensorControl=0;//¹Ø±ÕÈýÖá´«¸ÐÆ÷
- 478   4      
- 479   4                                      commuFlag=0;//¹Ø±ÕÍ¨ÐÅ
- 480   4      
- 481   4                                      alarmFlag=0;//¹Ø±¨¾¯±êÖ¾Î»
- 482   4                                      alarmCount=0;//±¨¾¯¼ÆÊý´ÎÊýÇåÁã
- 483   4                                      turnflag=1;
- 484   4      
- 485   4      //                              VoiceControl=1;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 9   
+ 422   3                              ComMode_3_Data();                                       //Ïò¸½»ú·¢ËÍ±àÂë3
+ 423   3                      }
+ 424   2              }
+ 425   1      
+ 426   1              if(ModeFlag==3)
+ 427   1              {
+ 428   2                      if(alarmFlag==1)
+ 429   2                      {
+ 430   3                              VoiceControl=0;                 //Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
+ 431   3                              PAshutdown=1;
+ 432   3                              SC_Speech(3);                   //¹Ø»úÓïÑÔÌáÐÑ
+ 433   3                              Delay(120);
+ 434   3                              PAshutdown=0;
+ 435   3                              VoiceControl=1;                 //¿ªÆôÊ°ÉùÆ÷
+ 436   3                      }
+ 437   2                      if(alarmFlag==1)
+ 438   2                      {
+ 439   3                              VoiceControl=0;                 //Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
+ 440   3                              PAshutdown=1;
+ 441   3                              SC_Speech(4);                   //¹Ø»úÓïÑÔÌáÐÑ
+ 442   3                              Delay(190);
+ 443   3                              PAshutdown=0;
+ 444   3                              VoiceControl=1;                 //¿ªÆôÊ°ÉùÆ÷
+ 445   3                      }
+ 446   2                      if(ModeFlag==3)
+ 447   2                      {
+ 448   3                              ComMode_3_Data();               //Ïò¸½»ú·¢ËÍ±àÂë3
+ 449   3                      }
+ 450   2                      if(alarmFlag==1)
+ 451   2                      {
+ 452   3                              VoiceControl=0;                 //Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
+ 453   3                              PAshutdown=1;
+ 454   3                              SC_Speech(3);                   //¹Ø»úÓïÑÔÌáÐÑ
+ 455   3                              Delay(120);
+ 456   3                              PAshutdown=0;
+ 457   3                              VoiceControl=1;                 //¿ªÆôÊ°ÉùÆ÷
+ 458   3                      }
+ 459   2                      if(alarmFlag==1)
+ 460   2                      {
+ 461   3                              VoiceControl=0;                 //Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
+ 462   3                              PAshutdown=1;
+ 463   3                              SC_Speech(11);                  //¹Ø»úÓïÑÔÌáÐÑ
+ 464   3                              Delay(190);
+ 465   3                              PAshutdown=0;
+ 466   3                              VoiceControl=1;                 //¿ªÆôÊ°ÉùÆ÷
+ 467   3                      }
+ 468   2                      if(ModeFlag==3)
+ 469   2                      {
+ 470   3                              ComMode_3_Data();               //Ïò¸½»ú·¢ËÍ±àÂë3
+ 471   3                      }
+ 472   2                      if(alarmCount>=20)                      //µ÷½ÚÓïÒôµÄ¶ÎÊý
+ 473   2                      {
+ 474   3                              alarmCount=0;                   //Çå±¨¾¯¼ÆÊýÆ÷
+ 475   3                              alarmFlag=0;                    //Çå±¨¾¯±êÖ¾
+ 476   3                      }
+ 477   2                      alarmCount++;
+ 478   2              }
+ 479   1      }
+ 480          
+ 481          void ComMode_1_Data()                           //·¢ËÍ±àÂë1
+ 482          {
+ 483   1              unsigned char i,n;
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 9   
 
- 486   4      //                              SC_Speech(12);  //
- 487   4      //                              Delay(100);
- 488   4      //      
- 489   4      //                              if(Check2>=0x3cf)//ÉèÖÃ±È½ÏµçÑ¹£¬´Ë´¦Îª4V,ÒÔ4.2VÎª»ù×¼
- 490   4      //                              {
- 491   4      //                                      SC_Speech(10);  //µçÁ¿³ä×ãÌáÊ¾
- 492   4      //                                      Delay(100);
- 493   4      //                              }
- 494   4      //                              else if(Check2<0x3cf&&Check2>=399)
- 495   4      //                              {
- 496   4      //                                      SC_Speech(9);  //µçÁ¿³ä×ãÌáÊ¾
- 497   4      //                                      Delay(100);
- 498   4      //                              }
- 499   4      //                              else if(Check2<0x399&&Check2>=0x366)
- 500   4      //                              {
- 501   4      //                                      SC_Speech(8);  //µçÁ¿³ä×ãÌáÊ¾
- 502   4      //                                      Delay(100);
- 503   4      //                              }
- 504   4      //                              else if(Check2<0x366)
- 505   4      //                              {
- 506   4      //                                      SC_Speech(7);  //µçÁ¿³ä×ãÌáÊ¾
- 507   4      //                                      Delay(100);
- 508   4      //                              }
- 509   4      //
- 510   4      //                              VoiceControl=0;//¿ªÆôÊ°ÉùÆ÷
- 511   4                              }
- 512   3                              break;
- 513   3      
- 514   3                              case ComMode_1:  //¸½»ú·¢ËÍ¹ýÀ´µÄÖ»ÓÃÄ£Ê½1£¬ËµÃ÷ÏÖÔÚÊÇÕý³£µÄ£¬Êý¾Ý²¿·ÖÎªÊý×éµÄµÚÒ»ºÍµÚ¶þ¸ö×Ö½Ú£¬ÎªÃÜÂë±
-             -íÄÚµÄÕâ¸ö±àÂëµÄ¿ªÊ¼×Ö½ÚµÄÄÇ¸öµØÖ·£¬È»ºóÌî³äÊý¾ÝÖ¡£¬°ÑÃÜÂë±íµÄÊý¾Ý·¢ËÍ³öÈ¥
- 515   3                              {
- 516   4      //                                      commode2_flag=1;
- 517   4                                      ComMode_22_Data();//»Ø¸´È·ÈÏÐÅºÅ
- 518   4                                      alarmFlag=0;//¹Ø±¨¾¯±êÖ¾Î»
- 519   4                                      alarmCount=0;//±¨¾¯¼ÆÊý´ÎÊýÇåÁã
- 520   4                                      commode2_flag=0;  //¹Ø±Õ±àÂë2ÐÅºÅµÄ·¢ËÍ
- 521   4      //                                      commode3_flag=0;
- 522   4      
- 523   4      //                              lastAddr=newAddr;
- 524   4                                      SensorControl=0;        //¹Ø±ÕÈýÖá´«¸ÐÆ÷
- 525   4                                      downUpFlag=0;           //¹Øµ¹µØ¡¢Ì§Æð¼ì²â
- 526   4                                                              
- 527   4      //                                      if(TestFlag>=3)//ÓÐÒì³£Çé¿ö»Ö¸´Ê±£¬¿ªÆôµç×ÓËø
- 528   4      //                                      {
- 529   4                                      if(magnetflag==0)
- 530   4                                      {
- 531   5                                              MagentControl_1=1;//¿ªÆô´ÅÌú
- 532   5                                              MagentControl_2=0;
- 533   5                                              Delay(27);
- 534   5                                              MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 535   5                                              MagentControl_2=0;
- 536   5                                              magnetflag=1;
- 537   5                                      }
- 538   4      //                                      }
- 539   4                                      TestFlag=0;     
- 540   4                                      
- 541   4                                      if(ModeFlag==3||ModeFlag==2)
- 542   4                                      {
- 543   5                                      //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
- 544   5                                              ModeFlag=1;
- 545   5                                      }
- 546   4                              }
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 10  
+ 484   1              ModeControl_1=1;                                //Ð¡¹¦ÂÊ·¢ÉäÄ£Ê½                                
+ 485   1              tran_en=1;
+ 486   1              myTxRxData[0]=CmdHead;
+ 487   1              myTxRxData[1]=MyAddress;
+ 488   1              myTxRxData[2]=ComMode_1;
+ 489   1              myTxRxData[3]=0x00;
+ 490   1              myTxRxData[4]=0x00;
+ 491   1              myTxRxData[5]=0x00;
+ 492   1              myTxRxData[6]=0x00;
+ 493   1      
+ 494   1              initsignal2();                                                                                                     
+ 495   1      
+ 496   1              for(i=0;i<7;i++)
+ 497   1              {
+ 498   2                      for(n=0;n<8;n++)
+ 499   2                      {
+ 500   3                              if((myTxRxData[i]&0x80)==0x80)                  //Îª1
+ 501   3                              {
+ 502   4                                      P10=0;
+ 503   4                                      Delay3(120);                                            //ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 504   4                              }
+ 505   3                              else                                                                    //Îª0µÄÇé¿ö
+ 506   3                              {
+ 507   4                                      P10=0;
+ 508   4                                      Delay3(80);                                                     //ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
+ 509   4                              }
+ 510   3                              P10=1;                                                                  //³£Ì¬Îª¸ßµçÆ½
+ 511   3                              myTxRxData[i]<<=1;
+ 512   3                              Delay3(50);                                                             //ÑÓÊ±Òª´óÓÚ2ms
+ 513   3                      }
+ 514   2              }
+ 515   1              tran_en=0;
+ 516   1      }
+ 517          
+ 518          void ComMode_2_Data()                                                           //·¢ËÍ±àÂë2
+ 519          {
+ 520   1              unsigned char i,n;
+ 521   1              ModeControl_1=0;                                                                //Ð¡¹¦ÂÊ
+ 522   1              tran_en=1;
+ 523   1              myTxRxData[0]=CmdHead;
+ 524   1              myTxRxData[1]=MyAddress;
+ 525   1              myTxRxData[2]=0xc2;
+ 526   1              myTxRxData[3]=0x00;
+ 527   1              myTxRxData[4]=0x00;
+ 528   1              myTxRxData[5]=0x00;
+ 529   1              myTxRxData[6]=0x00;
+ 530   1      
+ 531   1              initsignal2();
+ 532   1              for(i=0;i<7;i++)
+ 533   1              {
+ 534   2                      for(n=0;n<8;n++)
+ 535   2                      {
+ 536   3                              if((myTxRxData[i]&0x80)==0x80)
+ 537   3                              {
+ 538   4                                      P10=0;
+ 539   4                                      Delay3(120);
+ 540   4                              }
+ 541   3                              else
+ 542   3                              {
+ 543   4                                      P10=0;
+ 544   4                                      Delay3(80);
+ 545   4                              }
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 10  
 
- 547   3                              break;
- 548   3      /*
- 549   3                                      case ComMode_1:  //¸½»ú·¢ËÍ¹ýÀ´µÄÖ»ÓÃÄ£Ê½1£¬ËµÃ÷ÏÖÔÚÊÇÕý³£µÄ£¬Êý¾Ý²¿·ÖÎªÊý×éµÄµÚÒ»ºÍµÚ¶þ¸ö×Ö½Ú£¬ÎªÃÜÂë
-             -±íÄÚµÄÕâ¸ö±àÂëµÄ¿ªÊ¼×Ö½ÚµÄÄÇ¸öµØÖ·£¬È»ºóÌî³äÊý¾ÝÖ¡£¬°ÑÃÜÂë±íµÄÊý¾Ý·¢ËÍ³öÈ¥
- 550   3                                      {
- 551   3      
- 552   3      
- 553   3      //                                                      newAddr=(newAddr|myTxRxData[4])<<8;//¸ß°ËÎ»
- 554   3      //                                                      newAddr=newAddr+myTxRxData[3];             //µÍ°ËÎ»
- 555   3      
- 556   3              
- 557   3              
- 558   3                                                              if(PassWord[lastAddr+1]==myTxRxData[5]&&PassWord[lastAddr+2]==myTxRxData[6])//ÃÜÂë±íÊÇ·ñ¹ö¶¯ÁËÒ»¸öÈ
-             -»ºó¶ÔµÄ×¡
- 559   3                                                              {
- 560   3                                                                      
- 561   3      //                                                              if(newAddr==0 &&( (lastAddr-newAddr)>=997 ||(lastAddr-newAddr)==0))
- 562   3      //                                                              { 
- 563   3                                                                      
- 564   3      //                                                              if(newAddr>=999)
- 565   3      //                                                              {
- 566   3      //                                                                      newAddr=0;
- 567   3      //                                                                      lastAddr=newAddr;//±£´æÕâ´ÎµÄÃÜÂëµØÖ·£¬ÎªÏÂ´ÎµØÖ·×öÐ£¶ÔÊ¹ÓÃ
- 568   3      //                                                              }
- 569   3      //                                                              else 
- 570   3      //                                                              {
- 571   3      //                                                                      lastAddr=newAddr;//±£´æÕâ´ÎµÄÃÜÂëµØÖ·£¬ÎªÏÂ´ÎµØÖ·×öÐ£¶ÔÊ¹ÓÃ
- 572   3      //                                                                      newAddr+=1;//µØÖ·¹ö¶¯Ò»´Î
- 573   3      //                                                              }
- 574   3      
- 575   3                                                                      ComMode_1_Data(newAddr);//»Ø¸´È·ÈÏÐÅºÅ
- 576   3                                                                      
- 577   3              
- 578   3                                                                      alarmFlag=0;//¹Ø±¨¾¯±êÖ¾Î»
- 579   3                                                                      alarmCount=0;//±¨¾¯¼ÆÊý´ÎÊýÇåÁã
- 580   3              
- 581   3                                                                      lastAddr=newAddr;
- 582   3                                                                      SensorControl=0;//¹Ø±ÕÈýÖá´«¸ÐÆ÷
- 583   3                                                                      
- 584   3                                                                 if(TestFlag>=3)//ÓÐÒì³£Çé¿ö»Ö¸´Ê±£¬¿ªÆôµç×ÓËø
- 585   3                                                                 {
- 586   3                                                                              MagentControl_1=0;//¿ªÆô´ÅÌú
- 587   3                                                                              MagentControl_2=1;
- 588   3                                                                              Delay(1);
- 589   3      //                                                                      MagentControl_1=1;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 590   3      //                                                                      MagentControl_2=1;
- 591   3                                                                      
- 592   3                                                                              MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 593   3                                                                              MagentControl_2=0;
- 594   3                                                                      }
- 595   3              
- 596   3                                                                      TestFlag=0;     
- 597   3                                                                      
- 598   3                                                                      if(ModeFlag==3||ModeFlag==2)
- 599   3                                                                      {
- 600   3                                                                      //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
- 601   3                                                                              ModeFlag=1;
- 602   3                                                                      }
- 603   3                                                              }
- 604   3      
- 605   3                                                              else//µØÖ·¹ö¶¯²»ÏàµÈ
- 606   3                                                              {
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 11  
+ 546   3                              P10=1;
+ 547   3                              myTxRxData[i]<<=1;
+ 548   3                              Delay3(50);
+ 549   3                      }
+ 550   2              }
+ 551   1              tran_en=0;
+ 552   1      }
+ 553          
+ 554          void ComMode_22_Data()
+ 555          {
+ 556   1              unsigned char i,n;
+ 557   1              ModeControl_1=0;
+ 558   1              tran_en=1;
+ 559   1              myTxRxData[0]=CmdHead;
+ 560   1              myTxRxData[1]=MyAddress;
+ 561   1              myTxRxData[2]=0xc2;
+ 562   1              myTxRxData[3]=0x00;
+ 563   1              myTxRxData[4]=0x00;
+ 564   1              myTxRxData[5]=0x00;
+ 565   1              myTxRxData[6]=0x00;
+ 566   1      
+ 567   1              initsignal();
+ 568   1              for(i=0;i<7;i++)
+ 569   1              {
+ 570   2                      for(n=0;n<8;n++)
+ 571   2                      {
+ 572   3                              if((myTxRxData[i]&0x80)==0x80)
+ 573   3                              {
+ 574   4                                      P10=0;
+ 575   4                                      Delay33(120);
+ 576   4                              }
+ 577   3                              else
+ 578   3                              {
+ 579   4                                      P10=0;
+ 580   4                                      Delay33(80);
+ 581   4                              }
+ 582   3                              P10=1;
+ 583   3                              myTxRxData[i]<<=1;
+ 584   3                              Delay33(50);
+ 585   3                      }
+ 586   2              }
+ 587   1              tran_en=0;
+ 588   1      }
+ 589          
+ 590          void ComMode_3_Data()
+ 591          {
+ 592   1              unsigned char i,n;
+ 593   1              ModeControl_1=0;                                                        //´ó¹¦ÂÊ
+ 594   1              tran_en=1;
+ 595   1              myTxRxData[0]=CmdHead;
+ 596   1              myTxRxData[1]=MyAddress;
+ 597   1              myTxRxData[2]=ComMode_3;
+ 598   1              myTxRxData[3]=0x00;
+ 599   1              myTxRxData[4]=0x00;
+ 600   1              myTxRxData[5]=0x00;
+ 601   1              myTxRxData[6]=0x00;
+ 602   1      
+ 603   1              initsignal2();
+ 604   1      
+ 605   1              for(i=0;i<7;i++)
+ 606   1              {
+ 607   2                      for(n=0;n<8;n++)
+C51 COMPILER V9.01   NEWHOST                                                               07/23/2013 14:15:08 PAGE 11  
 
- 607   3                                                                      newAddr=select(myTxRxData[5]);  //²éÕÒµÚÒ»¸öÃÜÂëµÄµØÖ·
- 608   3                                                                      if(newAddr!=1001)//ÕÒµ½ÁËÕâ¸ö
- 609   3                                                                      {
- 610   3                                                                              if(newAddr>=999)
- 611   3                                                                              {
- 612   3                                                                                      newAddr=0;
- 613   3                                                                                      lastAddr=newAddr;//±£´æÕâ´ÎµÄÃÜÂëµØÖ·£¬ÎªÏÂ´ÎµØÖ·×öÐ£¶ÔÊ¹ÓÃ
- 614   3                                                                              }
- 615   3                                                                              else
- 616   3                                                                              {
- 617   3                                                                                      lastAddr=newAddr;//±£´æÕâ´ÎµÄÃÜÂëµØÖ·£¬ÎªÏÂ´ÎµØÖ·×öÐ£¶ÔÊ¹ÓÃ
- 618   3                                                                                      newAddr+=1;//µØÖ·¹ö¶¯Ò»´Î
- 619   3                                                                              }
- 620   3      
- 621   3                                                                              ComMode_1_Data(newAddr);//»Ø¸´È·ÈÏÐÅºÅ
- 622   3      
- 623   3                                                                              alarmFlag=0;//¹Ø±¨¾¯±êÖ¾Î»
- 624   3                                                                              alarmCount=0;//±¨¾¯¼ÆÊý´ÎÊýÇåÁã
- 625   3                      
- 626   3                                                                              lastAddr=newAddr;
- 627   3                                                                              SensorControl=0;//¹Ø±ÕÈýÖá´«¸ÐÆ÷
- 628   3                                                                              
- 629   3                                                                         if(TestFlag>=3)//ÓÐÒì³£Çé¿ö»Ö¸´Ê±£¬¿ªÆôµç×ÓËø
- 630   3                                                                         {
- 631   3                                                                                      MagentControl_1=0;//¿ªÆô´ÅÌú
- 632   3                                                                                      MagentControl_2=1;
- 633   3                                                                                      Delay(1);
- 634   3                                                                                      MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 635   3                                                                                      MagentControl_2=0;
- 636   3                                                                              }
- 637   3                      
- 638   3                                                                              TestFlag=0;     
- 639   3                                                                              
- 640   3                                                                              if(ModeFlag==3||ModeFlag==2)
- 641   3                                                                              {
- 642   3                                                                              //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
- 643   3                                                                                      ModeFlag=1;
- 644   3                                                                              }
- 645   3                                                                      }
- 646   3                                                              }
- 647   3              //                                                      }
- 648   3              //                                                      else if(newAddr<=1000&&(newAddr-lastAddr<=3))
- 649   3              //                                                      else if((newAddr-lastAddr)<=3)
- 650   3              //                                                      {
- 651   3              //                                                              
- 652   3              //                                                              TestFlag=0;
- 653   3              //                                                              lastAddr=newAddr;
- 654   3              //                                                              SensorControl=1;//¹Ø±ÕÈýÖá´«¸ÐÆ÷
- 655   3              //                                                              ComMode_1_Data(newAddr);//»Ø¸´È·ÈÏÐÅºÅ
- 656   3              //                                                              if(ModeFlag==2)
- 657   3              //                                                              {
- 658   3              //                                                              //»Ö¸´ÁËÕý³££¬×öÏàÓ¦¸´Î»¶¯×÷
- 659   3              //                                                                      ModeFlag=1;
- 660   3              //                                                              }
- 661   3              //                                                      }
- 662   3              
- 663   3                                                              }
- 664   3                                      }
- 665   3                                      break;
- 666   3      */      
- 667   3                      }
- 668   2              }
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 12  
-
- 669   1      //      }
- 670   1      }
- 671          
- 672          void time0() interrupt 1        //×÷ÎªÕû¸öÏµÍ³×Ô¼ºµÄÊ±ÖÓ
- 673          {
- 674   1              TH0=timer0H;//ÖØ×°ÔØ
- 675   1              TL0=timer0L;
- 676   1              time0Count_3++;
- 677   1      
- 678   1              if(time0Count_3>=60)//´®¿ÚÃ¿1S½ÓÊÜÒ»´ÎµÄÊý¾ÝµÄÊ±¼ä±êÖ¾
- 679   1              {
- 680   2                      if(commuFlag==1)//ËµÃ÷¿ªÆôÁËÍ¨ÐÅ
- 681   2                      {
- 682   3                              TestFlag++;
- 683   3      
- 684   3                              if(TestFlag>=3&&ModeFlag==1)//ËµÃ÷Ã»ÓÐ½ÓÊÕµ½Êý¾ÝÒÑ¾­ÓÐ3´ÎÁË£¬¸½»úÒÑ¾­³öÁË3M£¬ÏÖÔÚ¾ÍÒª¼Ó´ó¹¦ÂÊ£¬ÇÐ»»µ½Ä£
-             -Ê½2,30MÔÙ¿´ÄÜ²»ÄÜ½ÓÊÕµ½Êý¾Ý
- 685   3                              {
- 686   4                                      TestFlag=5;
- 687   4                                      if(ModeFlag==1)
- 688   4                                      {
- 689   5      //                                      ComMode_2_Data(lastAddr);//Ïò¸½»ú·¢ËÍ±àÂë2
- 690   5      //                                      SendData(0xac);//²âÊÔÊý¾Ý       
- 691   5                                              if(magnetflag==1)
- 692   5                                              {
- 693   6                                                      MagentControl_1=0;//¿ªÆô´ÅÌú
- 694   6                                                      MagentControl_2=1;
- 695   6                                                      Delay(27);
- 696   6                                                      MagentControl_1=0;//´ÅÌú³£Ì¬ÎªÕâÖÖÄ£Ê½
- 697   6                                                      MagentControl_2=0;
- 698   6                                                      magnetflag=0;
- 699   6                                              }
- 700   5                      
- 701   5                                              SensorControl=1;//¿ªÆôÈýÖá´«¸ÐÆ÷
- 702   5                                              downUpFlag=1;//¿ªÆôµ¹µØ¡¢Ì§Æð±êÖ¾
- 703   5                                              ModeFlag=2;
- 704   5              
- 705   5      //                                      ComMode_2_Data();//Ïò¸½»ú·¢ËÍ±àÂë2
- 706   5                                              commode2_flag=1;
- 707   5                                      }       
- 708   4                              }
- 709   3      
- 710   3                              if(commode2_flag==1)
- 711   3                              {
- 712   4                                      ComMode_2_Data();       //Ïò¸½»ú·¢ËÍ±àÂë2       
- 713   4                              }
- 714   3                      }
- 715   2                      time0Count_3=0;
- 716   2                      
- 717   2                      Check1=GetADCResult(5);//Ê°ÒôÆ÷µÄ¼ì²â
- 718   2                      
- 719   2                      Check2=GetADCResult(6);//µçÁ¿¼ì²â
- 720   2              }
- 721   1      
- 722   1              if(SensorControl==1)//¼ì²âÈýÖá´«¸ÐÆ÷ÊÇ·ñ´ò¿ª
- 723   1              {
- 724   2                      if(ReceWave==0)//ËµÃ÷ÓÐ´¥·¢Çé¿ö£¬¿ªÊ¼¼ÆÊ±
- 725   2                      {
- 726   3                              time0Count_2++;
- 727   3                              if(time0Count_2>=30)//ËµÃ÷ÒÑ¾­´óÓÚ0.5S
- 728   3                              {
- 729   4                                      time0Count_2 =0;//¼ÆÊ±ÆÚÇåÁã
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 13  
-
- 730   4                                      SensorCount++;//ÈýÖá´«¸ÐÆ÷Âö³å¼ÆÊý¼Ó1
- 731   4                                      alarmFlag2=1;//
- 732   4                              }               
- 733   3                      }
- 734   2                      else if(ReceWave==1&&SensorCount!=0)//ËµÃ÷ÒÑ¾­ÓÐÒ»¸öÓÐÓÃµÄÂö³å
- 735   2                      {
- 736   3                              time0Count_1++;
- 737   3                              if(time0Count_1>=100)//´óÓÚ5S
- 738   3                              {
- 739   4                                      SensorCount=0;
- 740   4                              }
- 741   3                      }
- 742   2              }
- 743   1       
- 744   1              if(ModeFlag==2&&SensorCount>=1)//ÈýÖá´«¸ÐÆ÷Âö³åµÄÏàÓ¦±¨¾¯
- 745   1              {
- 746   2                      if(SensorCount==1&&alarmFlag2==1)//ÈýÖá´«¸ÐÆ÷Ò»´Î´¥·¢,alarmFlag2¿ØÖÆ·¢Éù1´Î
- 747   2                      {                                       
- 748   3                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 749   3                              PAshutdown=1;  //ÏÈ¹Ø±ÕÊ°ÒôÆ÷£¬È»ºó´ò¿ª¹¦·Å
- 750   3                              SC_Speech(1);  //¹Ø»úÓïÑÔÌáÐÑ
- 751   3                              Delay(140);
- 752   3                              PAshutdown=0;  //ÓïÒôÍê³Éºó£¬¹Ø±Õ¹¦·Å£¬È»ºó´ò¿ªÊ°ÒôÆ÷
- 753   3                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
- 754   3                              alarmFlag2=0;
- 755   3                      }
- 756   2      /*
- 757   2                      if(SensorCount==2&&alarmFlag2==1)//ÈýÖá´«¸ÐÆ÷¶þ´Î´¥·¢£¬alarmFlag2¿ØÖÆ·¢Éù1´Î
- 758   2                      {
- 759   2                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 760   2                              PAshutdown=1;
- 761   2                              SC_Speech(2);  //¹Ø»úÓïÑÔÌáÐÑ
- 762   2                              Delay(140);
- 763   2                              PAshutdown=0;
- 764   2                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
- 765   2                              alarmFlag2=0;
- 766   2                      }
- 767   2      */
- 768   2                      if(SensorCount>=2)//ÈýÖá´«¸ÐÆ÷Ò»´Î´¥·¢
- 769   2                      {
- 770   3      //                      ComMode_3_Data(); //Ïò¸½»ú·¢ËÍ±àÂë3
- 771   3                              ModeFlag=3;//ÈýÖá´«¸ÐÆ÷ÒÑ¾­ÓÐ3´Î´¥·¢ÁË£¬Òª¸Ä±ä·¢ÉäÄ£Ê½ÁË
- 772   3                              alarmFlag=1;//ÖÃÓïÒô±¨¾¯Î»
- 773   3                              alarmFlag2=0;
- 774   3                              SensorCount=0; //Âö³å¼ÆÊýÇåÁã
- 775   3                              Delay(1);
- 776   3                              commode2_flag=0;
- 777   3                              ComMode_3_Data(); //Ïò¸½»ú·¢ËÍ±àÂë3
- 778   3      //                      commode3_flag=1;
- 779   3                      }
- 780   2              }
- 781   1      
- 782   1              if(ModeFlag==3)
- 783   1              {
- 784   2                      if(alarmFlag==1)
- 785   2                      {
- 786   3                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 787   3                              PAshutdown=1;
- 788   3                              SC_Speech(3);  //¹Ø»úÓïÑÔÌáÐÑ
- 789   3                              Delay(120);
- 790   3                              PAshutdown=0;
- 791   3                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 14  
-
- 792   3                      }
- 793   2                      if(alarmFlag==1)
- 794   2                      {
- 795   3                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 796   3                              PAshutdown=1;
- 797   3                              SC_Speech(4);  //¹Ø»úÓïÑÔÌáÐÑ
- 798   3                              Delay(190);
- 799   3                              PAshutdown=0;
- 800   3                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
- 801   3                      }
- 802   2                      if(ModeFlag==3)
- 803   2                      {
- 804   3                              ComMode_3_Data(); //Ïò¸½»ú·¢ËÍ±àÂë3
- 805   3                      }
- 806   2                      if(alarmFlag==1)
- 807   2                      {
- 808   3                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 809   3                              PAshutdown=1;
- 810   3                              SC_Speech(3);  //¹Ø»úÓïÑÔÌáÐÑ
- 811   3                              Delay(120);
- 812   3                              PAshutdown=0;
- 813   3                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
- 814   3                      }
- 815   2                      if(alarmFlag==1)
- 816   2                      {
- 817   3                              VoiceControl=0;//Ê¹ÓÃÓïÒôÊ±Òª¹Ø±ÕÊ°ÉùÆ÷
- 818   3                              PAshutdown=1;
- 819   3                              SC_Speech(11);  //¹Ø»úÓïÑÔÌáÐÑ
- 820   3                              Delay(190);
- 821   3                              PAshutdown=0;
- 822   3                              VoiceControl=1;//¿ªÆôÊ°ÉùÆ÷
- 823   3                      }
- 824   2                      if(ModeFlag==3)
- 825   2                      {
- 826   3                              ComMode_3_Data(); //Ïò¸½»ú·¢ËÍ±àÂë3
- 827   3                      }
- 828   2                      if(alarmCount>=20) //µ÷½ÚÓïÒôµÄ¶ÎÊý
- 829   2                      {
- 830   3                              alarmCount=0;//Çå±¨¾¯¼ÆÊýÆ÷
- 831   3                              alarmFlag=0;//Çå±¨¾¯±êÖ¾
- 832   3                      }
- 833   2                      alarmCount++;
- 834   2              }
- 835   1      }
- 836          
- 837          void ComMode_1_Data()//·¢ËÍ±ßÂë1
- 838          {
- 839   1      //      P0M1&=0xfd;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
- 840   1      //      P0M2&=0xfd;
- 841   1      //      myPwm();        //¿ª·¢Éä»ú
- 842   1      //      ModeTurn=0;
- 843   1      /*
- 844   1              SendData(0x55);
- 845   1              SendData(0xf0);
- 846   1              SendData(0xaa);
- 847   1              SendData(0x0f);
- 848   1      */
- 849   1              unsigned char i,n;
- 850   1              ModeControl_1=1;//30M·¢Éä¹¦ÂÊ                           
- 851   1      
- 852   1              myTxRxData[0]=CmdHead;
- 853   1              myTxRxData[1]=MyAddress;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 15  
-
- 854   1              myTxRxData[2]=ComMode_1;
- 855   1              myTxRxData[3]=0x00;
- 856   1              myTxRxData[4]=0x00;
- 857   1              myTxRxData[5]=0x00;
- 858   1              myTxRxData[6]=0x00;
- 859   1      
- 860   1              initsignal2();                                                                                                     
- 861   1      
- 862   1              for(i=0;i<7;i++)
- 863   1              {
- 864   2                      for(n=0;n<8;n++)
- 865   2                      {
- 866   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
- 867   3                              {
- 868   4                                      P10=0;
- 869   4                                      Delay3(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 870   4                              }
- 871   3                              else//Îª0µÄÇé¿ö
- 872   3                              {
- 873   4                                      P10=0;
- 874   4                                      Delay3(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 875   4                              }
- 876   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
- 877   3                              myTxRxData[i]<<=1;
- 878   3                              Delay3(50);//ÑÓÊ±Òª´óÓÚ2ms
- 879   3                      }
- 880   2              }
- 881   1      
- 882   1      //      codeData(myTxRxData,7);
- 883   1      //      SendNByte(TxRxBuf,28);
- 884   1      //      PWMCON0=0x00;//¹Ø±ÕPWM
- 885   1      //      P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
- 886   1      //      P0M2&=0xfd;
- 887   1      //      ModeTurn=1;
- 888   1      }
- 889          
- 890          void ComMode_2_Data()//·¢ËÍ±ßÂë2
- 891          {
- 892   1      //      P0M1&=0xfd;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
- 893   1      //      P0M2&=0xfd;
- 894   1      //      myPwm();        //¿ª·¢Éä»ú
- 895   1      //      ModeTurn=0;
- 896   1      /*
- 897   1              SendData(0x55);
- 898   1              SendData(0xf0);
- 899   1              SendData(0xaa);
- 900   1              SendData(0x0f);
- 901   1      */
- 902   1              unsigned char i,n;
- 903   1              ModeControl_1=1;//30M·¢Éä¹¦ÂÊ
- 904   1      
- 905   1              myTxRxData[0]=CmdHead;
- 906   1              myTxRxData[1]=MyAddress;
- 907   1              myTxRxData[2]=0xc2;
- 908   1              myTxRxData[3]=0x00;
- 909   1              myTxRxData[4]=0x00;
- 910   1              myTxRxData[5]=0x00;
- 911   1              myTxRxData[6]=0x00;
- 912   1      
- 913   1              initsignal2();
- 914   1      
- 915   1              for(i=0;i<7;i++)
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 16  
-
- 916   1              {
- 917   2                      for(n=0;n<8;n++)
- 918   2                      {
- 919   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
- 920   3                              {
- 921   4                                      P10=0;
- 922   4                                      Delay3(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 923   4                              }
- 924   3                              else//Îª0µÄÇé¿ö
- 925   3                              {
- 926   4                                      P10=0;
- 927   4                                      Delay3(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 928   4                              }
- 929   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
- 930   3                              myTxRxData[i]<<=1;
- 931   3                              Delay3(50);//ÑÓÊ±Òª´óÓÚ2ms
- 932   3                      }
- 933   2              }
- 934   1      //      codeData(myTxRxData,7); //½øÐÐ±àÂë
- 935   1      //      SendNByte(TxRxBuf,28);
- 936   1      //      PWMCON0=0x00;//¹Ø±ÕPWM
- 937   1      //      P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
- 938   1      //      P0M2&=0xfd;
- 939   1      //      ModeTurn=1;
- 940   1      }
- 941          
- 942          void ComMode_22_Data()//·¢ËÍ±ßÂë2
- 943          {
- 944   1              unsigned char i,n;
- 945   1              ModeControl_1=1;//30M·¢Éä¹¦ÂÊ
- 946   1      
- 947   1              myTxRxData[0]=CmdHead;
- 948   1              myTxRxData[1]=MyAddress;
- 949   1              myTxRxData[2]=0xc2;
- 950   1              myTxRxData[3]=0x00;
- 951   1              myTxRxData[4]=0x00;
- 952   1              myTxRxData[5]=0x00;
- 953   1              myTxRxData[6]=0x00;
- 954   1      
- 955   1              initsignal();
- 956   1      
- 957   1              for(i=0;i<7;i++)
- 958   1              {
- 959   2                      for(n=0;n<8;n++)
- 960   2                      {
- 961   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
- 962   3                              {
- 963   4                                      P10=0;
- 964   4                                      Delay33(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 965   4                              }
- 966   3                              else//Îª0µÄÇé¿ö
- 967   3                              {
- 968   4                                      P10=0;
- 969   4                                      Delay33(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
- 970   4                              }
- 971   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
- 972   3                              myTxRxData[i]<<=1;
- 973   3                              Delay33(50);//ÑÓÊ±Òª´óÓÚ2ms
- 974   3                      }
- 975   2              }
- 976   1      }
- 977          
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 17  
-
- 978          void ComMode_3_Data()//·¢ËÍ±ßÂë3
- 979          {
- 980   1      //      P0M1&=0xfd;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
- 981   1      //      P0M2&=0xfd;
- 982   1      //      myPwm();        //¿ª·¢Éä»ú
- 983   1      //      ModeTurn=0;
- 984   1      /*
- 985   1              SendData(0x55);
- 986   1              SendData(0xf0);
- 987   1              SendData(0xaa);
- 988   1              SendData(0x0f);
- 989   1      */
- 990   1              unsigned char i,n;
- 991   1              ModeControl_1=0;//ÇÐ»»Îª300M·¢Éä
- 992   1      
- 993   1              myTxRxData[0]=CmdHead;
- 994   1              myTxRxData[1]=MyAddress;
- 995   1              myTxRxData[2]=ComMode_3;
- 996   1              myTxRxData[3]=0x00;
- 997   1              myTxRxData[4]=0x00;
- 998   1              myTxRxData[5]=0x00;
- 999   1              myTxRxData[6]=0x00;
-1000   1      
-1001   1              initsignal2();
-1002   1      
-1003   1              for(i=0;i<7;i++)
-1004   1              {
-1005   2                      for(n=0;n<8;n++)
-1006   2                      {
-1007   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
-1008   3                              {
-1009   4                                      P10=0;
-1010   4                                      Delay3(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1011   4                              }
-1012   3                              else//Îª0µÄÇé¿ö
-1013   3                              {
-1014   4                                      P10=0;
-1015   4                                      Delay3(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1016   4                              }
-1017   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
-1018   3                              myTxRxData[i]<<=1;
-1019   3                              Delay3(50);//ÑÓÊ±Òª´óÓÚ2ms
-1020   3                      }
-1021   2              }
-1022   1      //      codeData(myTxRxData,7); //½øÐÐ±àÂë
-1023   1      //      SendNByte(TxRxBuf,28);
-1024   1      //      PWMCON0=0x00;//¹Ø±ÕPWM
-1025   1      //      P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
-1026   1      //      P0M2&=0xfd;
-1027   1      //      ModeTurn=1;
-1028   1              ModeControl_1=1;                //·¢ËÍ±àÂë3Íê³Éºó£¬½«Ä£Ê½ÓÖÇÐ»»³É30m¾àÀë
-1029   1      }
-1030          
-1031          void ComMode_4_Data()//·¢ËÍÌ§Æð±àÂë
-1032          {
-1033   1      //      P0M1&=0xfd;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
-1034   1      //      P0M2&=0xfd;
-1035   1      //      myPwm();        //¿ª·¢Éä»ú
-1036   1      //      ModeTurn=0;
-1037   1      /*
-1038   1              SendData(0x55);
-1039   1              SendData(0xf0);
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 18  
-
-1040   1              SendData(0xaa);
-1041   1              SendData(0x0f);
-1042   1      */
-1043   1              unsigned char i,n;
-1044   1              ModeControl_1=0;//ÇÐ»»Îª300M·¢Éä
-1045   1      
-1046   1              myTxRxData[0]=CmdHead;
-1047   1              myTxRxData[1]=MyAddress;
-1048   1              myTxRxData[2]=ComMode_4;
-1049   1              myTxRxData[3]=0x00;
-1050   1              myTxRxData[4]=0x00;
-1051   1              myTxRxData[5]=0x00;
-1052   1              myTxRxData[6]=0x00;
-1053   1      
-1054   1              initsignal2();
-1055   1      
-1056   1              for(i=0;i<7;i++)
-1057   1              {
-1058   2                      for(n=0;n<8;n++)
-1059   2                      {
-1060   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
-1061   3                              {
-1062   4                                      P10=0;
-1063   4                                      Delay3(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1064   4                              }
-1065   3                              else//Îª0µÄÇé¿ö
-1066   3                              {
-1067   4                                      P10=0;
-1068   4                                      Delay3(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1069   4                              }
-1070   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
-1071   3                              myTxRxData[i]<<=1;
-1072   3                              Delay3(50);//ÑÓÊ±Òª´óÓÚ2ms
-1073   3                      }
-1074   2              }
-1075   1      //      codeData(myTxRxData,7); //½øÐÐ±àÂë
-1076   1      //      SendNByte(TxRxBuf,28);
-1077   1      //      PWMCON0=0x00;//¹Ø±ÕPWM
-1078   1      //      P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
-1079   1      //      P0M2&=0xfd;
-1080   1      //      ModeTurn=1;
-1081   1      }
-1082          
-1083          void ComMode_5_Data()//·¢ËÍµ¹µØ±àÂë
-1084          {
-1085   1      //      P0M1&=0xfd;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
-1086   1      //      P0M2&=0xfd;
-1087   1      //      myPwm();        //¿ª·¢Éä»ú
-1088   1      //      ModeTurn=0;
-1089   1      /*
-1090   1              SendData(0x55);
-1091   1              SendData(0xf0);
-1092   1              SendData(0xaa);
-1093   1              SendData(0x0f);
-1094   1      */
-1095   1              unsigned char i,n;
-1096   1              ModeControl_1=0;//ÇÐ»»Îª300M·¢Éä
-1097   1      
-1098   1              myTxRxData[0]=CmdHead;
-1099   1              myTxRxData[1]=MyAddress;
-1100   1              myTxRxData[2]=ComMode_5;
-1101   1              myTxRxData[3]=0x00;
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 19  
-
-1102   1              myTxRxData[4]=0x00;
-1103   1              myTxRxData[5]=0x00;
-1104   1              myTxRxData[6]=0x00;
-1105   1      
-1106   1              initsignal2();
-1107   1      
-1108   1              for(i=0;i<7;i++)
-1109   1              {
-1110   2                      for(n=0;n<8;n++)
-1111   2                      {
-1112   3                              if((myTxRxData[i]&0x80)==0x80)//Îª1
-1113   3                              {
-1114   4                                      P10=0;
-1115   4                                      Delay3(120);//ÑÓÊ±4.5msÒÔÉÏ£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1116   4                              }
-1117   3                              else//Îª0µÄÇé¿ö
-1118   3                              {
-1119   4                                      P10=0;
-1120   4                                      Delay3(80);//ÑÓÊ±2ms£¬ÓÉÓÚ¶¨Ê±Æ÷Õ¼ÓÃÎÊÌâ£¬Ö»ÄÜÓÃÕâÖÖÑÓÊ±À´ÊµÏÖ
-1121   4                              }
-1122   3                              P10=1;//³£Ì¬Îª¸ßµçÆ½
-1123   3                              myTxRxData[i]<<=1;
-1124   3                              Delay3(50);//ÑÓÊ±Òª´óÓÚ2ms
-1125   3                      }
-1126   2              }
-1127   1      //      codeData(myTxRxData,7); //½øÐÐ±àÂë
-1128   1      //      SendNByte(TxRxBuf,28);
-1129   1      //      PWMCON0=0x00;//¹Ø±ÕPWM
-1130   1      //      P0M1|=0x02;      //¸ß×èÄ£Ê½     £¬Ïàµ±¹Ø·¢Éä»ú
-1131   1      //      P0M2&=0xfd;
-1132   1      //      ModeTurn=1;     
-1133   1      }
-1134          
-1135          /*
-1136          void codeData(unsigned char *doData,unsigned char len)          //±àÂë ,µçÆ½1±äÎª0011£¬µçÆ½0±äÎª1100
-1137          {
-1138                  unsigned char n,j,i=0;
-1139                  for(n=0;n<len;n++)
-1140                  {       
-1141                          for(j=0;j<8;j++)        
-1142                          {
-1143                                  if(j==0||j==1)
-1144                                  {       
-1145                                           TxRxBuf[i]<<=4;
-1146                                          if((*doData&0x80)==0x80)
-1147                                          {
-1148                                                  TxRxBuf[i]|=0x03;       
-1149                                          }
-1150                                          else
-1151                                          {
-1152                                                  TxRxBuf[i]|=0x0c;
-1153                                          }
-1154                                          *doData<<=1;
-1155                                  }
-1156                                  else if(j==2||j==3)
-1157                                  {
-1158                                          TxRxBuf[i+1]<<=4;
-1159                                          if((*doData&0x80)==0x80)
-1160                                          {
-1161                                                  TxRxBuf[i+1]|=0x03;     
-1162                                          }
-1163                                          else
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 20  
-
-1164                                          {
-1165                                                  TxRxBuf[i+1]|=0x0c;
-1166                                          }
-1167                                          *doData<<=1;
-1168                                  }
-1169                                  else if(j==4||j==5)
-1170                                  {
-1171                                          TxRxBuf[i+2]<<=4;
-1172                                          if((*doData&0x80)==0x80)
-1173                                          {
-1174                                                  TxRxBuf[i+2]|=0x03;             
-1175                                          }
-1176                                          else
-1177                                          {
-1178                                                  TxRxBuf[i+2]|=0x0c;
-1179                                          }
-1180                                          *doData<<=1;
-1181                                  }
-1182                                  else if(j==6||j==7)
-1183                                  {
-1184                                          TxRxBuf[i+3]<<=4;
-1185                                          if((*doData&0x80)==0x80)
-1186                                          {
-1187                                                  TxRxBuf[i+3]|=0x03;                                             
-1188                                          }
-1189                                          else
-1190                                          {
-1191                                                  TxRxBuf[i+3]|=0x0c;                             
-1192                                          }
-1193                                          *doData<<=1;
-1194                                  }
-1195                          }
-1196                          i+=4;
-1197                          doData++;
-1198                  }
-1199          }
-1200          */
-1201          /*
-1202          void transCode(unsigned char *doData,unsigned char len)//½âÂë£¬½«½ÓÊÕµ½µÃÊý¾Ý»¹Ô­
-1203          {
-1204                  unsigned char i,j;
-1205                  for(i=0;i<len;i++)
-1206                  {
-1207                          for(j=0;j<2;j++)
-1208                          {
-1209                                  myTxRxData[i/4]<<=1;
-1210          
-1211                                  if((*doData&0x30)==0x30)//ËµÃ÷Îª1
-1212                                  {
-1213                                          myTxRxData[i/4]|=0x01;
-1214                                  }
-1215                                  else if((*doData&0xc0)==0xc0)  //ËµÃ÷Îª0
-1216                                  {
-1217                                          myTxRxData[i/4]&=0xfe;  
-1218                                  }
-1219          
-1220                                  *doData<<=4;
-1221                          }
-1222                          doData++;
-1223                  }
-1224          }
-1225          */
-C51 COMPILER V9.01   NEWHOST                                                               05/30/2013 10:23:43 PAGE 21  
-
+ 608   2                      {
+ 609   3                              if((myTxRxData[i]&0x80)==0x80)
+ 610   3                              {
+ 611   4                                      P10=0;
+ 612   4                                      Delay3(120);
+ 613   4                              }
+ 614   3                              else
+ 615   3                              {
+ 616   4                                      P10=0;
+ 617   4                                      Delay3(80);
+ 618   4                              }
+ 619   3                              P10=1;
+ 620   3                              myTxRxData[i]<<=1;
+ 621   3                              Delay3(50);
+ 622   3                      }
+ 623   2              }
+ 624   1              tran_en=0;
+ 625   1              ModeControl_1=1;                                                //·¢ËÍ±àÂë3Íê³Éºó£¬»»³ÉÐ¡¹¦ÂÊ
+ 626   1      }
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   1844    ----
+   CODE SIZE        =   1666    ----
    CONSTANT SIZE    =   ----    ----
-   XDATA SIZE       =     65      10
+   XDATA SIZE       =     60       8
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =     13    ----
+   BIT SIZE         =     11    ----
 END OF MODULE INFORMATION.
 
 

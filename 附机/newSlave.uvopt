@@ -174,10 +174,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>15</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>637</TopLine>
-      <CurrentLine>637</CurrentLine>
+      <TopLine>290</TopLine>
+      <CurrentLine>308</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\newSlave.c</PathWithFileName>
       <FilenameWithoutPath>newSlave.c</FilenameWithoutPath>
@@ -188,10 +188,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>48</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>1</TopLine>
+      <CurrentLine>1</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\AD.c</PathWithFileName>
       <FilenameWithoutPath>AD.c</FilenameWithoutPath>
@@ -230,10 +230,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>54</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>52</TopLine>
+      <CurrentLine>65</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UART.c</PathWithFileName>
       <FilenameWithoutPath>UART.c</FilenameWithoutPath>
@@ -1613,9 +1613,21 @@
       <Documents>
         <Doc>
           <Name>.\newSlave.c</Name>
-          <ColumnNumber>0</ColumnNumber>
-          <TopLine>637</TopLine>
-          <CurrentLine>637</CurrentLine>
+          <ColumnNumber>15</ColumnNumber>
+          <TopLine>290</TopLine>
+          <CurrentLine>308</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\AD.c</Name>
+          <ColumnNumber>48</ColumnNumber>
+          <TopLine>1</TopLine>
+          <CurrentLine>1</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\UART.c</Name>
+          <ColumnNumber>54</ColumnNumber>
+          <TopLine>52</TopLine>
+          <CurrentLine>65</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>

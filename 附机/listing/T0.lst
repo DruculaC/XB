@@ -1,9 +1,10 @@
-C51 COMPILER V9.01   T0                                                                    05/30/2013 10:25:25 PAGE 1   
+C51 COMPILER V9.01   T0                                                                    07/23/2013 16:33:42 PAGE 1   
 
 
 C51 COMPILER V9.01, COMPILATION OF MODULE T0
 OBJECT MODULE PLACED IN .\out\T0.obj
-COMPILER INVOKED BY: d:\Keil\C51\BIN\C51.EXE T0.c BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\T0.lst) OBJECT(.\out\T0.obj)
+COMPILER INVOKED BY: D:\Program Files (x86)\keil\C51\BIN\C51.EXE T0.c BROWSE DEBUG OBJECTEXTEND PRINT(.\listing\T0.lst) 
+                    -OBJECT(.\out\T0.obj)
 
 line level    source
 

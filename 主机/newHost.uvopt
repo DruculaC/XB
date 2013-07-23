@@ -174,10 +174,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>66</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>1180</TopLine>
-      <CurrentLine>1180</CurrentLine>
+      <TopLine>18</TopLine>
+      <CurrentLine>40</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\newHost.c</PathWithFileName>
       <FilenameWithoutPath>newHost.c</FilenameWithoutPath>
@@ -230,10 +230,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>0</ColumnNumber>
+      <ColumnNumber>10</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>0</TopLine>
-      <CurrentLine>0</CurrentLine>
+      <TopLine>109</TopLine>
+      <CurrentLine>122</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\UART.c</PathWithFileName>
       <FilenameWithoutPath>UART.c</FilenameWithoutPath>
@@ -1613,9 +1613,15 @@
       <Documents>
         <Doc>
           <Name>.\newHost.c</Name>
-          <ColumnNumber>66</ColumnNumber>
-          <TopLine>1180</TopLine>
-          <CurrentLine>1180</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>18</TopLine>
+          <CurrentLine>40</CurrentLine>
+        </Doc>
+        <Doc>
+          <Name>.\UART.c</Name>
+          <ColumnNumber>10</ColumnNumber>
+          <TopLine>109</TopLine>
+          <CurrentLine>122</CurrentLine>
         </Doc>
       </Documents>
     </MDIGroup>
