@@ -174,10 +174,10 @@
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>15</ColumnNumber>
+      <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>290</TopLine>
-      <CurrentLine>308</CurrentLine>
+      <TopLine>164</TopLine>
+      <CurrentLine>167</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\newSlave.c</PathWithFileName>
       <FilenameWithoutPath>newSlave.c</FilenameWithoutPath>
@@ -1613,9 +1613,9 @@
       <Documents>
         <Doc>
           <Name>.\newSlave.c</Name>
-          <ColumnNumber>15</ColumnNumber>
-          <TopLine>290</TopLine>
-          <CurrentLine>308</CurrentLine>
+          <ColumnNumber>0</ColumnNumber>
+          <TopLine>164</TopLine>
+          <CurrentLine>167</CurrentLine>
         </Doc>
         <Doc>
           <Name>.\AD.c</Name>
